@@ -26,31 +26,42 @@ N_RESULTS = 5
 print("Loading query engine...")
 _model = SentenceTransformer(MODEL_NAME)
 _client = chromadb.PersistentClient(path=CHROMA_DIR)
-_collection = _client.get_collection(COLLECTION_NAME)
-print(f"Ready. {_collection.count()} chunks indexed.")
+
+try:
+    _default_collection = _client.get_collection(COLLECTION_NAME)
+    print(f"Ready. {_default_collection.count()} chunks indexed.")
+except Exception:
+    _default_collection = None
+    print(f"Note: default collection '{COLLECTION_NAME}' not found — load data via the dashboard.")
 
 
 # ── MAIN QUERY FUNCTION ─────────────────────────────────────
-def query(question, n_results=N_RESULTS):
+def query(question, n_results=N_RESULTS, collection_name=None):
     """
     Takes a natural language question.
     Returns a list of relevant chunks with metadata.
-    
-    Each result looks like:
-    {
-        "text": "the relevant chunk text...",
-        "date": "2025-03-10",
-        "meeting": "CityCouncil",
-        "page": 4,
-        "score": 0.87  ← similarity score
-    }
+
+    Pass collection_name to query a dynamically loaded collection;
+    omit to use the default collection.
     """
+
+    # Resolve which collection to search
+    if collection_name and collection_name != COLLECTION_NAME:
+        try:
+            col = _client.get_collection(collection_name)
+        except Exception:
+            col = _default_collection
+    else:
+        col = _default_collection
+
+    if col is None:
+        return []
 
     # Step 1: Convert question to embedding
     question_embedding = _model.encode(question).tolist()
 
     # Step 2: Search ChromaDB
-    results = _collection.query(
+    results = col.query(
         query_embeddings=[question_embedding],
         n_results=n_results,
         include=["documents", "metadatas", "distances"]
