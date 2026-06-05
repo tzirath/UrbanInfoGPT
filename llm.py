@@ -82,7 +82,7 @@ def _cache_key(question: str, filters: dict = None) -> str:
     return hashlib.md5(content.encode()).hexdigest()
 
 
-def get_cached_answer(question: str, filters: dict = None) -> dict | None:
+def get_cached_answer(question: str, filters: dict = None):
     path = os.path.join(CACHE_DIR, f"{_cache_key(question, filters)}.json")
     if not os.path.exists(path):
         return None
