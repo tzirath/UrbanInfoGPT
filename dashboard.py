@@ -16,6 +16,7 @@ import plotly.graph_objects as go
 import pipeline
 from query import query
 from llm import get_answer
+from utils.links import build_datasette_url, build_image_url
 try:
     from agents.query_refiner import refined_search, get_last_refined_queries
 except Exception as _ref_err:
@@ -291,7 +292,28 @@ def _source_card(i, chunk):
 
             html.P(chunk["text"][:230] + "…",
                    style={"fontSize": "0.81rem", "color": "#4B5563",
-                          "marginBottom": 0, "lineHeight": "1.5"}),
+                          "marginBottom": "10px", "lineHeight": "1.5"}),
+
+            dbc.ButtonGroup([
+                dbc.Button(
+                    [html.I(className="bi bi-file-text me-1"), "View Document"],
+                    href=build_datasette_url(chunk["meeting"], chunk["date"], chunk["page"]),
+                    target="_blank",
+                    color="primary",
+                    size="sm",
+                    outline=True,
+                    style={"fontSize": "0.72rem"},
+                ),
+                dbc.Button(
+                    [html.I(className="bi bi-image me-1"), "View Page Image"],
+                    href=build_image_url(chunk["meeting"], chunk["date"], chunk["page"]),
+                    target="_blank",
+                    color="secondary",
+                    size="sm",
+                    outline=True,
+                    style={"fontSize": "0.72rem"},
+                ),
+            ], size="sm"),
         ], style={"padding": "12px 14px"}),
     ], style={"border": f"1px solid {BORDER}", "borderRadius": "8px",
               "boxShadow": "0 1px 3px rgba(0,0,0,.05)", "height": "100%"})

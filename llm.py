@@ -12,6 +12,7 @@ warnings.filterwarnings("ignore")
 import os
 from dotenv import load_dotenv
 import anthropic
+from utils.links import build_datasette_url
 
 # Load the .env file
 load_dotenv()
@@ -48,6 +49,8 @@ Rules:
 - When resolution details are provided under 'RESOLUTION DETAILS', use them
   to give specific context about what each resolution involved. Always name
   the resolution AND describe what it was about — never just cite the number.
+- When citing sources, include the URL provided in the excerpt header as a
+  markdown link. Format: [View source](URL)
 - End your answer with a "Sources" section listing the dates and pages used
 """
 
@@ -62,8 +65,9 @@ def format_context(chunks):
     context_parts = []
 
     for i, chunk in enumerate(chunks):
+        url = build_datasette_url(chunk["meeting"], chunk["date"], chunk["page"])
         context_parts.append(
-            f"[Excerpt {i+1} | {chunk['date']} | Page {chunk['page']}]\n"
+            f"[Excerpt {i+1} | {chunk['date']} | Page {chunk['page']} | {url}]\n"
             f"{chunk['text']}\n"
         )
 
