@@ -538,35 +538,6 @@ def chat_layout():
     ], className="chat-page")
 
 
-# ── COVERAGE HELPERS (called at render time, not via callback) ─
-
-def _coverage_text():
-    coverage = pipeline.get_coverage()
-    total    = coverage.get("total_chunks", 0)
-    if not total:
-        return "No data indexed."
-    segments = coverage.get("segments", [])
-    dates = [d for seg in segments
-               for d in [seg.get("date_from"), seg.get("date_to")] if d]
-    date_str = f"{min(dates)} – {max(dates)}" if dates else "unknown range"
-    return html.Span([
-        html.I(className="bi bi-database me-1"),
-        f"{total:,} chunks indexed · {date_str}",
-    ])
-
-
-def _manifest_text():
-    segments = pipeline.get_coverage().get("segments", [])
-    if not segments:
-        return ""
-    return html.Div([
-        html.Span("Indexed: ", style={"fontWeight": "600", "color": NAVY}),
-        *[html.Div(f"• {seg['label']} ({seg['chunks']:,} chunks)",
-                   style={"paddingLeft": "12px"})
-          for seg in segments],
-    ])
-
-
 # ── ANALYTICS LAYOUT ──────────────────────────────────────────
 
 def analytics_layout():
@@ -832,7 +803,13 @@ def analytics_layout():
         html.Div([
             html.Hr(style={"borderColor": BORDER, "margin": "8px 0 16px"}),
             html.Div([
-                html.Div(_coverage_text(), style={"fontSize": ".82rem", "color": MUTED}),
+                html.Div(
+                    html.Span([
+                        html.I(className="bi bi-database me-1"),
+                        f"{_init_coverage.get('total_chunks', 0):,} chunks indexed",
+                    ]) if _init_coverage.get("total_chunks") else "No data indexed.",
+                    style={"fontSize": ".82rem", "color": MUTED},
+                ),
                 dbc.Button(
                     [html.I(className="bi bi-database-fill-add me-1"), "Add data"],
                     id="btn-manage-data", color="light", size="sm",
@@ -907,8 +884,15 @@ def analytics_layout():
                              style={"marginTop": "10px", "fontSize": ".8rem", "color": MUTED}),
                     dbc.Collapse([
                         html.Hr(style={"borderColor": BORDER, "margin": "12px 0"}),
-                        html.Div(_manifest_text(),
-                                 style={"fontSize": ".78rem", "color": MUTED, "marginBottom": "8px"}),
+                        html.Div(
+                            html.Div([
+                                html.Span("Indexed: ", style={"fontWeight": "600", "color": NAVY}),
+                                *[html.Div(f"• {seg['label']} ({seg['chunks']:,} chunks)",
+                                           style={"paddingLeft": "12px"})
+                                  for seg in _init_coverage.get("segments", [])],
+                            ]) if _init_coverage.get("segments") else "",
+                            style={"fontSize": ".78rem", "color": MUTED, "marginBottom": "8px"},
+                        ),
                         html.Pre(id="progress-text",
                                  style={"background": "#1a1f2e", "color": "#E2E8F0",
                                         "borderRadius": "6px", "padding": "10px 14px",
