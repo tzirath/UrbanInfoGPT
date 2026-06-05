@@ -319,6 +319,27 @@ def _source_card(i, chunk):
               "boxShadow": "0 1px 3px rgba(0,0,0,.05)", "height": "100%"})
 
 
+def _render_source_grid(chunks: list):
+    """Render a source card grid from a list of chunks."""
+    if not chunks:
+        return ""
+    return html.Div([
+        html.Div([
+            html.I(className="bi bi-journal-text me-2",
+                   style={"color": NAVY, "fontSize": "0.85rem"}),
+            html.Span("Source Documents",
+                      style={"fontWeight": "600", "color": NAVY,
+                             "fontSize": "0.82rem",
+                             "textTransform": "uppercase",
+                             "letterSpacing": "0.05em"}),
+        ], className="d-flex align-items-center mb-3"),
+        dbc.Row([
+            dbc.Col(_source_card(i, c), width=4)
+            for i, c in enumerate(chunks)
+        ], className="g-3"),
+    ])
+
+
 def _group_checklist(group_id, group_name, types):
     return html.Div([
         html.Div(group_name,
@@ -504,6 +525,16 @@ app.layout = html.Div([
                 html.Div(id="sources-panel",         className="mb-2"),
                 html.Div(id="search-strategy-panel", className="mb-2"),
             ]),
+            dbc.Button(
+                [html.I(className="bi bi-chevron-down me-1"), "Show more sources"],
+                id="show-more-btn",
+                color="link",
+                size="sm",
+                n_clicks=0,
+                style={"display": "none", "fontSize": "0.8rem",
+                       "color": SLATE, "paddingLeft": 0},
+                className="mb-3",
+            ),
         ], style={"maxWidth": "900px", "margin": "0 auto"}),
 
         # ── Context charts ───────────────────────────────
@@ -685,6 +716,7 @@ app.layout = html.Div([
 
     # ── Hidden state ────────────────────────────────────────
     dcc.Store(id="active-collection", data=_initial_store),
+    dcc.Store(id="chunks-store",      data=None),
     dcc.Interval(id="poll-interval", interval=1000, n_intervals=0, disabled=True),
 
 ], style={"fontFamily": "Inter, system-ui, sans-serif", "backgroundColor": BG})
@@ -973,6 +1005,10 @@ def handle_indexing(index_click, n_intervals,
 @app.callback(
     Output("answer-panel",          "children"),
     Output("sources-panel",         "children"),
+    Output("chunks-store",          "data"),
+    Output("show-more-btn",         "style"),
+    Output("show-more-btn",         "children"),
+    Output("show-more-btn",         "n_clicks"),
     Output("search-strategy-panel", "children"),
     Input("ask-button", "n_clicks"),
     State("question-input",   "value"),
@@ -984,14 +1020,16 @@ def handle_indexing(index_click, n_intervals,
     prevent_initial_call=True,
 )
 def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
+    _btn_hidden = {"display": "none"}
+    _btn_label  = [html.I(className="bi bi-chevron-down me-1"), "Show more sources"]
+
     if not question or not question.strip():
         return (
             dbc.Alert([html.I(className="bi bi-exclamation-circle me-2"),
                        "Enter a question above."],
                       color="warning",
                       className="d-flex align-items-center"),
-            "",
-            "",
+            "", None, _btn_hidden, _btn_label, 0, "",
         )
 
     coll_name = (coll_data or {}).get("collection_name")
@@ -1003,13 +1041,12 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                        " at the bottom of the page to get started."],
                       color="info",
                       className="d-flex align-items-center"),
-            "",
-            "",
+            "", None, _btn_hidden, _btn_label, 0, "",
         )
 
     chunks = refined_search(
         question,
-        n_results=5,
+        n_results=10,
         collection_name=coll_name,
         date_from=f_start or None,
         date_to=f_end or None,
@@ -1022,8 +1059,7 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
         return (
             dbc.Alert("No results found for this query. Try broadening your filters.",
                       color="warning"),
-            "",
-            "",
+            "", None, _btn_hidden, _btn_label, 0, "",
         )
 
     # Analytics routing — pass active filters so resolution lookups are scoped
@@ -1037,7 +1073,11 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                                                   filters=rag_filters) \
         if _analytics else (None, "rag")
 
-    answer = get_answer(question, chunks, analytics_context=analytics_ctx)
+    answer, chunks, from_cache = get_answer(
+        question, chunks,
+        analytics_context=analytics_ctx,
+        filters=rag_filters,
+    )
 
     # Header badges
     active_filters = []
@@ -1057,26 +1097,30 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                   style={"fontSize": "0.7rem", "fontWeight": "400"})
         if active_filters else None
     )
-
     source_badge = (
         dbc.Badge("Analytics + RAG", color="info", className="ms-2",
                   style={"fontSize": "0.68rem"})
         if analytics_ctx else
         dbc.Badge("Semantic Search", color="light",
                   text_color="secondary", className="ms-2",
-                  style={"fontSize": "0.68rem",
-                         "border": f"1px solid {BORDER}"})
+                  style={"fontSize": "0.68rem", "border": f"1px solid {BORDER}"})
+    )
+    cache_badge = (
+        dbc.Badge([html.I(className="bi bi-lightning-charge-fill me-1"), "Cached"],
+                  color="warning", className="ms-2",
+                  style={"fontSize": "0.68rem"})
+        if from_cache else None
     )
 
     answer_card = dbc.Card([
         dbc.CardHeader([
             html.Div([
-                html.I(className="bi bi-robot me-2",
-                       style={"color": BLUE}),
+                html.I(className="bi bi-robot me-2", style={"color": BLUE}),
                 html.Span("Answer",
                           style={"fontWeight": "600", "color": NAVY,
                                  "fontSize": "0.92rem"}),
                 source_badge,
+                cache_badge,
                 filter_badge,
             ], className="d-flex align-items-center"),
         ], style={"backgroundColor": "#EEF2FF",
@@ -1090,28 +1134,48 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
     ], style={"border": f"1px solid {BORDER}", "borderRadius": "10px",
               "boxShadow": "0 2px 8px rgba(0,0,0,.07)"})
 
-    if chunks and chunks[0]["score"] > 0.1:
-        sources = html.Div([
-            html.Div([
-                html.I(className="bi bi-journal-text me-2",
-                       style={"color": NAVY, "fontSize": "0.85rem"}),
-                html.Span("Source Documents",
-                          style={"fontWeight": "600", "color": NAVY,
-                                 "fontSize": "0.82rem",
-                                 "textTransform": "uppercase",
-                                 "letterSpacing": "0.05em"}),
-            ], className="d-flex align-items-center mb-3"),
-            dbc.Row([
-                dbc.Col(_source_card(i, c), width=4)
-                for i, c in enumerate(chunks[:3])
-            ], className="g-3"),
-        ])
-    else:
-        sources = ""
-
+    show_relevant = chunks and chunks[0]["score"] > 0.1
+    sources  = _render_source_grid(chunks[:3]) if show_relevant else ""
     strategy = _search_strategy_panel(question, refined_queries)
 
-    return answer_card, sources, strategy
+    # Show-more button: visible only when there are more than 3 chunks
+    extra = len(chunks) - 3
+    if show_relevant and extra > 0:
+        btn_style  = {"fontSize": "0.8rem", "color": SLATE, "paddingLeft": 0}
+        btn_label  = [html.I(className="bi bi-chevron-down me-1"),
+                      f"Show {extra} more source{'s' if extra != 1 else ''}"]
+    else:
+        btn_style = _btn_hidden
+        btn_label = _btn_label
+
+    return answer_card, sources, chunks, btn_style, btn_label, 0, strategy
+
+
+# 10. Show more / fewer sources
+@app.callback(
+    Output("sources-panel", "children", allow_duplicate=True),
+    Output("show-more-btn", "children", allow_duplicate=True),
+    Input("show-more-btn", "n_clicks"),
+    State("chunks-store", "data"),
+    prevent_initial_call=True,
+)
+def toggle_sources(n_clicks, chunks_data):
+    if not n_clicks:   # reset from run_query firing n_clicks=0
+        return dash.no_update, dash.no_update
+    chunks = chunks_data or []
+    if not chunks:
+        return dash.no_update, dash.no_update
+
+    if n_clicks % 2 == 1:   # odd → expanded
+        visible    = chunks
+        btn_label  = [html.I(className="bi bi-chevron-up me-1"), "Show fewer sources"]
+    else:                    # even → collapsed
+        visible    = chunks[:3]
+        extra      = len(chunks) - 3
+        btn_label  = [html.I(className="bi bi-chevron-down me-1"),
+                      f"Show {extra} more source{'s' if extra != 1 else ''}"]
+
+    return _render_source_grid(visible), btn_label
 
 
 # ── RUN ──────────────────────────────────────────────────────

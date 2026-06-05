@@ -20,6 +20,16 @@ print("Loading query engine...")
 _model  = SentenceTransformer(MODEL_NAME)
 _client = chromadb.PersistentClient(path=CHROMA_DIR)
 
+# ── Embedding cache (session-scoped) ─────────────────────────
+EMBEDDING_CACHE: dict = {}
+
+
+def get_question_embedding(question: str) -> list:
+    key = question.lower().strip()
+    if key not in EMBEDDING_CACHE:
+        EMBEDDING_CACHE[key] = _model.encode(question).tolist()
+    return EMBEDDING_CACHE[key]
+
 try:
     _default_collection = _client.get_collection(COLLECTION_NAME)
     print(f"Ready. {_default_collection.count()} chunks indexed.")
@@ -129,7 +139,7 @@ def query(
     lo, hi = _date_bounds(date_from, date_to)
 
     # ── Semantic search ──────────────────────────────────
-    embedding = _model.encode(question).tolist()
+    embedding = get_question_embedding(question)
     where     = _build_where(meeting_types, content_type)
 
     fetch_n = CANDIDATE_POOL * 3 if (date_from or date_to) else CANDIDATE_POOL
