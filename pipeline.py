@@ -6,6 +6,9 @@ import threading
 from calendar import monthrange
 from datetime import datetime
 
+# Prevents tokenizer multiprocessing from leaking semaphores on macOS Python 3.9
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
 import requests
 import chromadb
 from sentence_transformers import SentenceTransformer
@@ -23,7 +26,7 @@ MODEL_NAME      = "sentence-transformers/all-MiniLM-L6-v2"
 BATCH_SIZE = 256
 
 # ── Thread-safe progress state ────────────────────────────────
-_state = {"status": "idle", "lines": [], "collection_name": None}
+_state = {"status": "idle", "lines": [], "collection_name": None, "chunks_added": 0}
 _lock  = threading.Lock()
 
 
@@ -33,6 +36,7 @@ def get_progress():
             "status":          _state["status"],
             "lines":           list(_state["lines"]),
             "collection_name": _state["collection_name"],
+            "chunks_added":    _state.get("chunks_added", 0),
         }
 
 
@@ -265,7 +269,8 @@ def _run(meeting_types, date_from, date_to):
             pass
 
         _log(f"✓ Ready! {total:,} chunks indexed with hybrid search.")
-        _set(status="done", collection_name=COLLECTION_NAME)
+        _set(status="done", collection_name=COLLECTION_NAME,
+             chunks_added=len(chunks))
 
     except Exception as e:
         _log(f"Error: {e}")
@@ -278,3 +283,23 @@ def start_pipeline(meeting_types, date_from, date_to):
         args=(meeting_types, date_from, date_to),
         daemon=True,
     ).start()
+
+
+def run_pipeline(meeting_types, date_from, date_to) -> dict:
+    """
+    Synchronous pipeline — blocks until complete.
+    Returns {"chunks_added": int, "meeting_types": list, "date_from": str, "date_to": str}.
+    Raises RuntimeError on failure (caller decides whether to continue).
+    """
+    _run(meeting_types, date_from, date_to)
+    state = get_progress()
+    if state["status"] == "error":
+        last_line = state["lines"][-1] if state["lines"] else "no output"
+        raise RuntimeError(last_line)
+    return {
+        "chunks_added":  state["chunks_added"],
+        "rows_fetched":  0,   # not separately tracked; see progress lines
+        "meeting_types": meeting_types,
+        "date_from":     date_from,
+        "date_to":       date_to,
+    }
