@@ -184,7 +184,6 @@ _CHART_BASE = dict(
     paper_bgcolor="white", plot_bgcolor="white",
     font=dict(family="Inter, system-ui, sans-serif", size=11, color=TEXT),
     margin=dict(l=0, r=16, t=8, b=0),
-    showlegend=True,
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1,
                 font=dict(size=10)),
 )
@@ -206,7 +205,7 @@ def _vote_chart(votes_data):
                          marker_color=DANGER,    hovertemplate="%{y}: %{x} Nay<extra></extra>"))
     fig.add_trace(go.Bar(name="Absent", x=absents, y=names, orientation="h",
                          marker_color="#9CA3AF", hovertemplate="%{y}: %{x} Absent<extra></extra>"))
-    fig.update_layout(**_CHART_BASE, barmode="stack", height=340,
+    fig.update_layout(**_CHART_BASE, showlegend=True, barmode="stack", height=340,
                       xaxis=dict(showgrid=True, gridcolor="#F3F4F6", zeroline=False),
                       yaxis=dict(showgrid=False))
     return fig
@@ -539,6 +538,35 @@ def chat_layout():
     ], className="chat-page")
 
 
+# ── COVERAGE HELPERS (called at render time, not via callback) ─
+
+def _coverage_text():
+    coverage = pipeline.get_coverage()
+    total    = coverage.get("total_chunks", 0)
+    if not total:
+        return "No data indexed."
+    segments = coverage.get("segments", [])
+    dates = [d for seg in segments
+               for d in [seg.get("date_from"), seg.get("date_to")] if d]
+    date_str = f"{min(dates)} – {max(dates)}" if dates else "unknown range"
+    return html.Span([
+        html.I(className="bi bi-database me-1"),
+        f"{total:,} chunks indexed · {date_str}",
+    ])
+
+
+def _manifest_text():
+    segments = pipeline.get_coverage().get("segments", [])
+    if not segments:
+        return ""
+    return html.Div([
+        html.Span("Indexed: ", style={"fontWeight": "600", "color": NAVY}),
+        *[html.Div(f"• {seg['label']} ({seg['chunks']:,} chunks)",
+                   style={"paddingLeft": "12px"})
+          for seg in segments],
+    ])
+
+
 # ── ANALYTICS LAYOUT ──────────────────────────────────────────
 
 def analytics_layout():
@@ -804,8 +832,7 @@ def analytics_layout():
         html.Div([
             html.Hr(style={"borderColor": BORDER, "margin": "8px 0 16px"}),
             html.Div([
-                html.Div(id="index-coverage-text",
-                         style={"fontSize": ".82rem", "color": MUTED}),
+                html.Div(_coverage_text(), style={"fontSize": ".82rem", "color": MUTED}),
                 dbc.Button(
                     [html.I(className="bi bi-database-fill-add me-1"), "Add data"],
                     id="btn-manage-data", color="light", size="sm",
@@ -880,7 +907,7 @@ def analytics_layout():
                              style={"marginTop": "10px", "fontSize": ".8rem", "color": MUTED}),
                     dbc.Collapse([
                         html.Hr(style={"borderColor": BORDER, "margin": "12px 0"}),
-                        html.Div(id="manifest-display",
+                        html.Div(_manifest_text(),
                                  style={"fontSize": ".78rem", "color": MUTED, "marginBottom": "8px"}),
                         html.Pre(id="progress-text",
                                  style={"background": "#1a1f2e", "color": "#E2E8F0",
@@ -999,41 +1026,15 @@ def nav_active(pathname):
     )
 
 
-# 4. Coverage → sidebar + analytics coverage text
+# 4. Coverage → sidebar chunk count only
+# (index-coverage-text / manifest-display are computed statically in analytics_layout)
 @app.callback(
-    Output("sidebar-chunk-count",  "children"),
-    Output("index-coverage-text",  "children"),
-    Output("manifest-display",     "children"),
+    Output("sidebar-chunk-count", "children"),
     Input("active-collection", "data"),
 )
-def update_coverage(coll_data):
-    coverage = pipeline.get_coverage()
-    total    = coverage.get("total_chunks", 0)
-    segments = coverage.get("segments", [])
-
-    chunk_label = f"{total:,} chunks"
-
-    if not total:
-        return chunk_label, "No data indexed.", ""
-
-    dates = []
-    for seg in segments:
-        if seg.get("date_from"): dates.append(seg["date_from"])
-        if seg.get("date_to"):   dates.append(seg["date_to"])
-    date_str = f"{min(dates)} – {max(dates)}" if dates else "unknown range"
-
-    idx_text = html.Span([
-        html.I(className="bi bi-database me-1"),
-        f"{total:,} chunks indexed · {date_str}",
-    ])
-    manifest = html.Div([
-        html.Span("Indexed: ", style={"fontWeight": "600", "color": NAVY}),
-        *[html.Div(f"• {seg['label']} ({seg['chunks']:,} chunks)",
-                   style={"paddingLeft": "12px"})
-          for seg in segments],
-    ]) if segments else ""
-
-    return chunk_label, idx_text, manifest
+def update_coverage(_):
+    total = pipeline.get_coverage().get("total_chunks", 0)
+    return f"{total:,} chunks"
 
 
 # 5. Fill question from example
