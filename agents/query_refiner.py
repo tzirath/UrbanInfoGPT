@@ -10,7 +10,7 @@ from query import query
 load_dotenv()
 
 # COST PER QUERY BREAKDOWN:
-# Query refinement (claude-haiku-20240307): ~$0.0003
+# Query refinement (claude-haiku-4-5-20251001): ~$0.0003
 # 3-4 ChromaDB searches: ~$0.000 (local)
 # Resolution auto-lookups (ChromaDB only): ~$0.000
 # Main answer (claude-sonnet-4-6): ~$0.010
@@ -37,7 +37,7 @@ def refine_query(question: str) -> list:
     Cost: ~$0.0003 per call
     """
     response = _client.messages.create(
-        model="claude-haiku-20240307",
+        model="claude-haiku-4-5-20251001",
         max_tokens=150,
         system="""You are a search query optimizer for \
 Denver City Council meeting minutes. Generate \
