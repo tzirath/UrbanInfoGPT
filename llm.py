@@ -70,13 +70,14 @@ Rules:
 
 # ── ANSWER CACHE ───────────────────────────────────────────
 CACHE_DIR       = "data/cache/queries"
-CACHE_TTL_HOURS = 24
+CACHE_TTL_HOURS = 1     # bump to 24 for production
+CACHE_VERSION   = "v2"  # bump when prompt or schema changes to auto-invalidate
 
 
 def _cache_key(question: str, filters: dict = None) -> str:
     import hashlib
     content = json.dumps(
-        {"q": question.lower().strip(), "f": filters or {}},
+        {"q": question.lower().strip(), "f": filters or {}, "v": CACHE_VERSION},
         sort_keys=True,
     )
     return hashlib.md5(content.encode()).hexdigest()
