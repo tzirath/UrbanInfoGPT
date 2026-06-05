@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated / binary data — rebuild locally with scripts/run_analytics.py and pipeline
+data/chroma/
+data/bm25/

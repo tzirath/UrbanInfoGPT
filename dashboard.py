@@ -17,6 +17,18 @@ import pipeline
 from query import query
 from llm import get_answer
 
+try:
+    from analytics import load_analytics
+    from analytics.query_router import get_analytics_context
+    _analytics = load_analytics()
+    if _analytics:
+        print("Analytics loaded.")
+    else:
+        print("Analytics not found — run scripts/run_analytics.py to enable.")
+except Exception as _e:
+    _analytics = None
+    print(f"Analytics unavailable: {_e}")
+
 # ── PALETTE ──────────────────────────────────────────────────
 NAVY      = "#1B3A5C"
 NAVY_DARK = "#112840"
@@ -89,7 +101,8 @@ EXAMPLE_QUESTIONS = [
 # ── DATE OPTIONS ─────────────────────────────────────────────
 def _month_options():
     from datetime import date
-    opts, d, end = [], date(2020, 1, 1), date(2027, 12, 1)
+    today = date.today()
+    opts, d, end = [], date(2020, 1, 1), date(today.year, today.month, 1)
     while d <= end:
         opts.append({"label": d.strftime("%b %Y"), "value": d.strftime("%Y-%m")})
         m, y = d.month + 1, d.year
@@ -375,14 +388,22 @@ app.layout = html.Div([
                 html.Span("Try: ", style={"fontSize": "0.8rem", "color": SLATE,
                                           "fontWeight": "500", "marginRight": "4px"}),
                 *[
-                    dbc.Badge(
-                        q, color="light", text_color="primary",
-                        className="me-2 mb-1 px-3 py-2",
-                        style={"cursor": "pointer", "fontWeight": "500",
-                               "fontSize": "0.76rem",
-                               "border": f"1px solid {BORDER}",
-                               "borderRadius": "20px"},
+                    html.Button(
+                        q,
                         id={"type": "example", "index": i},
+                        n_clicks=0,
+                        className="me-2 mb-1",
+                        style={
+                            "cursor": "pointer",
+                            "fontSize": "0.76rem",
+                            "fontWeight": "500",
+                            "color": BLUE,
+                            "backgroundColor": "white",
+                            "border": f"1px solid {BORDER}",
+                            "borderRadius": "20px",
+                            "padding": "4px 14px",
+                            "lineHeight": "1.5",
+                        },
                     )
                     for i, q in enumerate(EXAMPLE_QUESTIONS)
                 ],
@@ -935,9 +956,13 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
             "",
         )
 
-    answer = get_answer(question, chunks)
+    # Analytics routing
+    analytics_ctx, qtype = get_analytics_context(question, _analytics) \
+        if _analytics else (None, "rag")
 
-    # Build filter context line
+    answer = get_answer(question, chunks, analytics_context=analytics_ctx)
+
+    # Header badges
     active_filters = []
     if f_start or f_end:
         active_filters.append(f"{f_start or '?'} → {f_end or '?'}")
@@ -947,12 +972,23 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
         )
     if f_content:
         active_filters.append(f_content)
+
     filter_badge = (
         dbc.Badge([html.I(className="bi bi-funnel me-1"),
                    " · ".join(active_filters)],
                   color="secondary", className="ms-2",
                   style={"fontSize": "0.7rem", "fontWeight": "400"})
         if active_filters else None
+    )
+
+    source_badge = (
+        dbc.Badge("Analytics + RAG", color="info", className="ms-2",
+                  style={"fontSize": "0.68rem"})
+        if analytics_ctx else
+        dbc.Badge("Semantic Search", color="light",
+                  text_color="secondary", className="ms-2",
+                  style={"fontSize": "0.68rem",
+                         "border": f"1px solid {BORDER}"})
     )
 
     answer_card = dbc.Card([
@@ -963,6 +999,7 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                 html.Span("Answer",
                           style={"fontWeight": "600", "color": NAVY,
                                  "fontSize": "0.92rem"}),
+                source_badge,
                 filter_badge,
             ], className="d-flex align-items-center"),
         ], style={"backgroundColor": "#EEF2FF",

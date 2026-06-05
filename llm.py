@@ -25,27 +25,26 @@ client = anthropic.Anthropic(
 # This is the most important part of preventing hallucination.
 # We tell Claude exactly what it can and cannot do.
 
-SYSTEM_PROMPT = """You are UrbanInfoGPT, an assistant that answers 
+SYSTEM_PROMPT = """You are UrbanInfoGPT, an assistant that answers
 questions about Denver City Council meetings and decisions.
 
-If the question is not related to Denver City Council meetings, 
+If the question is not related to Denver City Council meetings,
 policies, votes, contracts, or city governance, respond with:
-"I can only answer questions about Denver City Council meetings 
+"I can only answer questions about Denver City Council meetings
 and decisions. Please ask something related to city governance."
 
 You will be given:
 1. A question from the user
-2. A set of relevant excerpts from actual Denver City Council minutes
-
-Your job is to answer the question based ONLY on the provided excerpts.
+2. Optionally: pre-computed structured analytics (vote tallies, financial totals)
+3. A set of relevant excerpts from actual Denver City Council minutes
 
 Rules:
-- Only use information from the provided excerpts
-- If the excerpts don't contain enough information, say so honestly
-- Always mention specific dates, dollar amounts, and resolution numbers 
-  when they appear in the excerpts
+- When structured analytics data is provided, use it as the primary
+  source for quantitative claims (vote counts, spending totals, rankings)
+- Use the meeting-minutes excerpts for qualitative context and specifics
+- Always mention specific dates, dollar amounts, and resolution numbers
 - Keep answers concise and factual
-- Do not speculate or add information not in the excerpts
+- Do not speculate or add information not in the provided data
 - End your answer with a "Sources" section listing the dates and pages used
 """
 
@@ -70,25 +69,33 @@ def format_context(chunks):
 
 
 # ── MAIN FUNCTION ───────────────────────────────────────────
-def get_answer(question, chunks):
+def get_answer(question, chunks, analytics_context=None):
     """
-    Takes a question and retrieved chunks.
+    Takes a question, retrieved chunks, and optional pre-computed analytics.
     Returns Claude's synthesized answer as a string.
-    """
 
-    # If best similarity score is too low, question is off-topic
-    if chunks[0]["score"] < 0.1:
+    analytics_context: formatted string from analytics.query_router,
+                       or None for pure RAG answers.
+    """
+    # Guardrail: off-topic question (low similarity, no analytics to fall back on)
+    if not analytics_context and chunks[0]["score"] < 0.1:
         return ("I couldn't find relevant information about that "
                 "in Denver City Council records. Try rephrasing "
                 "or ask about a specific council topic.")
-    
 
-    # Format chunks into readable context
     context = format_context(chunks)
 
-    # Build the user message
-    # This is the full prompt Claude receives
-    user_message = f"""Here are relevant excerpts from Denver City Council minutes:
+    if analytics_context:
+        user_message = f"""STRUCTURED ANALYTICS DATA:
+{analytics_context}
+
+SUPPORTING EXCERPTS FROM MEETING MINUTES:
+{context}
+
+Based on the analytics data and supporting excerpts, please answer:
+{question}"""
+    else:
+        user_message = f"""Here are relevant excerpts from Denver City Council minutes:
 
 {context}
 

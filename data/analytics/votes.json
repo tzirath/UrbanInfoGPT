@@ -1,0 +1,4188 @@
+{
+  "generated_at": "2026-06-05T02:44:17.819385",
+  "summary": {
+    "total_votes_parsed": 315,
+    "unanimous_votes": 232,
+    "contested_votes": 83,
+    "most_contested_bills": [
+      {
+        "resolution": "25-1552",
+        "date": "2025-12-22",
+        "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+        "nay_count": 11,
+        "nays": [
+          "Alvidrez",
+          "Flynn",
+          "Gilmore",
+          "Gonzales-Gutierrez",
+          "Hinds",
+          "Kashmann",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres",
+          "Watson",
+          "Sandoval"
+        ],
+        "result": "Took out of order"
+      },
+      {
+        "resolution": "25-0153",
+        "date": "2025-04-07",
+        "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+        "nay_count": 10,
+        "nays": [
+          "Alvidrez",
+          "Flynn",
+          "Gonzales-Gutierrez",
+          "Hinds",
+          "Lewis",
+          "Romero Campbell",
+          "Sandoval",
+          "Sawyer",
+          "Torres",
+          "Watson"
+        ],
+        "result": "Placed upon final consideration and do pass"
+      },
+      {
+        "resolution": "25-0030",
+        "date": "2025-02-24",
+        "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+        "nay_count": 10,
+        "nays": [
+          "Flynn",
+          "Gonzales-Gutierrez",
+          "Hinds",
+          "Kashmann",
+          "Lewis",
+          "Romero Campbell",
+          "Sandoval",
+          "Sawyer",
+          "Torres",
+          "Watson"
+        ],
+        "result": "Placed upon final consideration and do pass"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-10",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Alvidrez",
+          "Gilmore",
+          "Gonzales-Gutierrez",
+          "Kashmann",
+          "Lewis",
+          "Sawyer"
+        ],
+        "result": "Adopted"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-03",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Flynn",
+          "Hinds",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres",
+          "Watson"
+        ],
+        "result": "Offered"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-03",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Flynn",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres",
+          "Watson",
+          "Sandoval"
+        ],
+        "result": "Offered"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-03",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Alvidrez",
+          "Flynn",
+          "Hinds",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres"
+        ],
+        "result": "Offered"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-03",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Alvidrez",
+          "Flynn",
+          "Hinds",
+          "Romero Campbell",
+          "Sawyer",
+          "Watson"
+        ],
+        "result": "Offered"
+      },
+      {
+        "resolution": "unknown",
+        "date": "2025-11-03",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Flynn",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres",
+          "Watson",
+          "Sandoval"
+        ],
+        "result": "Offered"
+      },
+      {
+        "resolution": "25-0628",
+        "date": "2025-09-08",
+        "description": "",
+        "nay_count": 6,
+        "nays": [
+          "Flynn",
+          "Romero Campbell",
+          "Sawyer",
+          "Torres",
+          "Watson",
+          "Sandoval"
+        ],
+        "result": "Amended"
+      }
+    ],
+    "date_range": {
+      "from": "2025-01-06",
+      "to": "2025-12-22"
+    }
+  },
+  "members": {
+    "Alvidrez": {
+      "total_votes": 309,
+      "aye_count": 291,
+      "nay_count": 18,
+      "absent_count": 4,
+      "abstain_count": 1,
+      "nay_rate": 0.0583,
+      "nay_bills": [
+        {
+          "resolution": "24-1791",
+          "date": "2025-01-13",
+          "meeting": "CityCouncil",
+          "description": "24-1791 A bill for an ordinance amending Article V, Chapter 24 of the",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "24-1866",
+          "date": "2025-02-18",
+          "meeting": "CityCouncil",
+          "description": "24-1866 A bill for an ordinance amending the Denver Zoning Code,",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0191",
+          "date": "2025-03-17",
+          "meeting": "CityCouncil",
+          "description": "25-0191 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1053",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Hinds",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1056",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-1056 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0922",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-0922 A bill for an ordinance submitting to a vote of registered electors of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann"
+          ]
+        },
+        {
+          "resolution": "25-1137",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1137 A bill for an ordinance approving the Amended and Restated 27th",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1714",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1714 A bill for an ordinance amending Ordinance 915, Series of 2025,",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Gilmore",
+            "Parady (3) BILLS FOR FINAL CONSIDERATION"
+          ]
+        },
+        {
+          "resolution": "25-1714",
+          "date": "2025-11-24",
+          "meeting": "CityCouncil",
+          "description": "25-1714 A bill for an ordinance amending Ordinance 915, Series of 2025,",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1883",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1883 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Sawyer",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-03-24",
+        "2025-10-27",
+        "2025-11-03",
+        "2025-11-03"
+      ],
+      "lone_nay_count": 3
+    },
+    "Flynn": {
+      "total_votes": 307,
+      "aye_count": 274,
+      "nay_count": 33,
+      "absent_count": 6,
+      "abstain_count": 0,
+      "nay_rate": 0.1075,
+      "nay_bills": [
+        {
+          "resolution": "24-1791",
+          "date": "2025-01-13",
+          "meeting": "CityCouncil",
+          "description": "24-1791 A bill for an ordinance amending Article V, Chapter 24 of the",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0044",
+          "date": "2025-02-18",
+          "meeting": "CityCouncil",
+          "description": "25-0044 A bill for an ordinance concerning the regulation of noise.",
+          "bill_result": "Ordered published",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0549",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0549 A bill for an ordinance establishing a new Fund in the \u201cGrant and",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0686",
+          "date": "2025-06-30",
+          "meeting": "CityCouncil",
+          "description": "25-0686 A bill for an ordinance repealing certain subsections of Article X of",
+          "bill_result": "Ordered published as amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0685",
+          "date": "2025-06-30",
+          "meeting": "CityCouncil",
+          "description": "25-0685 A bill for an ordinance amending Chapter 59 (Zoning) of the Denver",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Romero"
+          ]
+        },
+        {
+          "resolution": "25-0684",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-0684 A bill for an ordinance amending the Denver Zoning Code, by",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gilmore",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-15",
+          "meeting": "CityCouncil",
+          "description": "25-0628 A bill for an ordinance concerning recycling and organic material",
+          "bill_result": "Placed upon final consideration and do pass as amended",
+          "other_nays": [
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1427",
+          "date": "2025-10-14",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1427",
+          "date": "2025-10-20",
+          "meeting": "CityCouncil",
+          "description": "25-1427 A bill for an ordinance amending Ordinance No. 400, Series of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1527",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "25-1527 A resolution approving a proposed Contract between the City and",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Romero Campbell",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1634",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1634 A bill for an ordinance amending Denver Revised Municipal Code",
+          "bill_result": "Ordered published",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1634",
+          "date": "2025-11-24",
+          "meeting": "CityCouncil",
+          "description": "25-1634 A bill for an ordinance amending Denver Revised Municipal Code",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1556",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Romero Campbell",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1556",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "25-1556 A bill for an ordinance concerning implementation of the collective",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-04-14",
+        "2025-05-19",
+        "2025-07-14",
+        "2025-07-28",
+        "2025-09-15",
+        "2025-12-08"
+      ],
+      "lone_nay_count": 6
+    },
+    "Gilmore": {
+      "total_votes": 260,
+      "aye_count": 244,
+      "nay_count": 16,
+      "absent_count": 47,
+      "abstain_count": 1,
+      "nay_rate": 0.0615,
+      "nay_bills": [
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1060 A bill for an Ordinance designating the projects to be undertaken",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Romero"
+          ]
+        },
+        {
+          "resolution": "25-0684",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-0684 A bill for an ordinance amending the Denver Zoning Code, by",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0922",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-0922 A bill for an ordinance submitting to a vote of registered electors of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann"
+          ]
+        },
+        {
+          "resolution": "25-1216",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1216 A resolution approving the Collective Bargaining Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1714",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1714 A bill for an ordinance amending Ordinance 915, Series of 2025,",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Parady (3) BILLS FOR FINAL CONSIDERATION"
+          ]
+        },
+        {
+          "resolution": "25-1891",
+          "date": "2025-12-01",
+          "meeting": "CityCouncil",
+          "description": "25-1891 A bill for an ordinance making a rescission from General Fund",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1883",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1883 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1881",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1881 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1541",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1541 A bill for an ordinance changing the zoning classification of 709",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-01-13",
+        "2025-02-24",
+        "2025-02-24",
+        "2025-03-24",
+        "2025-04-07",
+        "2025-04-07",
+        "2025-04-07",
+        "2025-04-07",
+        "2025-06-09",
+        "2025-06-09",
+        "2025-06-09",
+        "2025-06-09",
+        "2025-08-18",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-29",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-12-15",
+        "2025-12-15",
+        "2025-12-15",
+        "2025-12-15"
+      ],
+      "lone_nay_count": 1
+    },
+    "Hinds": {
+      "total_votes": 286,
+      "aye_count": 267,
+      "nay_count": 19,
+      "absent_count": 22,
+      "abstain_count": 3,
+      "nay_rate": 0.0664,
+      "nay_bills": [
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0545",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0545 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0713",
+          "date": "2025-06-23",
+          "meeting": "CityCouncil",
+          "description": "25-0713 A resolution approving a proposed Revival And Second Amendatory",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0885",
+          "date": "2025-06-30",
+          "meeting": "CityCouncil",
+          "description": "25-0885 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1060 A bill for an Ordinance designating the projects to be undertaken",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Kashmann",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-1053",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Alvidrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1053",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1053 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1054",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-1054 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0922",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-0922 A bill for an ordinance submitting to a vote of registered electors of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1384",
+          "date": "2025-12-01",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-03-10",
+        "2025-03-10",
+        "2025-03-10",
+        "2025-04-01",
+        "2025-04-01",
+        "2025-04-01",
+        "2025-04-01",
+        "2025-04-01",
+        "2025-05-12",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-08-04",
+        "2025-08-04",
+        "2025-11-03",
+        "2025-12-01",
+        "2025-12-08",
+        "2025-12-15",
+        "2025-12-15",
+        "2025-12-15",
+        "2025-12-15"
+      ],
+      "lone_nay_count": 1
+    },
+    "Kashmann": {
+      "total_votes": 292,
+      "aye_count": 285,
+      "nay_count": 7,
+      "absent_count": 15,
+      "abstain_count": 0,
+      "nay_rate": 0.024,
+      "nay_bills": [
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1060 A bill for an Ordinance designating the projects to be undertaken",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Hinds",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Romero"
+          ]
+        },
+        {
+          "resolution": "25-0922",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-0922 A bill for an ordinance submitting to a vote of registered electors of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-04-07",
+        "2025-05-19",
+        "2025-08-04",
+        "2025-08-04",
+        "2025-09-08",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-10-27",
+        "2025-11-10"
+      ],
+      "lone_nay_count": 0
+    },
+    "Lewis": {
+      "total_votes": 262,
+      "aye_count": 225,
+      "nay_count": 37,
+      "absent_count": 39,
+      "abstain_count": 0,
+      "nay_rate": 0.1412,
+      "nay_bills": [
+        {
+          "resolution": "25-0022",
+          "date": "2025-02-03",
+          "meeting": "CityCouncil",
+          "description": "25-0022 A resolution approving a proposed Third Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": []
+        },
+        {
+          "resolution": "24-1775",
+          "date": "2025-02-03",
+          "meeting": "CityCouncil",
+          "description": "24-1775 A resolution approving a proposed Third Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0184",
+          "date": "2025-03-03",
+          "meeting": "CityCouncil",
+          "description": "25-0184 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0189",
+          "date": "2025-03-03",
+          "meeting": "CityCouncil",
+          "description": "25-0189 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0167",
+          "date": "2025-03-03",
+          "meeting": "CityCouncil",
+          "description": "25-0167 A bill for an ordinance authorizing a capital equipment purchase",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Parady (2) Block Vote"
+          ]
+        },
+        {
+          "resolution": "25-0167",
+          "date": "2025-03-10",
+          "meeting": "CityCouncil",
+          "description": "25-0167 A bill for an ordinance authorizing a capital equipment purchase",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0256",
+          "date": "2025-04-01",
+          "meeting": "CityCouncil",
+          "description": "25-0256 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0556",
+          "date": "2025-05-05",
+          "meeting": "CityCouncil",
+          "description": "25-0556 A resolution approving an Amendatory Agreement with Ferkam",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Parady",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0545",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0545 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Hinds",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-06-09",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Suspended rules of procedure to allow late filing",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0713",
+          "date": "2025-06-23",
+          "meeting": "CityCouncil",
+          "description": "25-0713 A resolution approving a proposed Revival And Second Amendatory",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0885",
+          "date": "2025-06-30",
+          "meeting": "CityCouncil",
+          "description": "25-0885 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Hinds",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1060 A bill for an Ordinance designating the projects to be undertaken",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Hinds",
+            "Kashmann",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0803",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-0803 A bill for an ordinance changing the zoning classification for 4235",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1053",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Alvidrez",
+            "Hinds"
+          ]
+        },
+        {
+          "resolution": "25-1057",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1057 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1053",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1053 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Hinds"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Parady",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1137",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1137 A bill for an ordinance approving the Amended and Restated 27th",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1216",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1216 A resolution approving the Collective Bargaining Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1427",
+          "date": "2025-10-14",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Flynn"
+          ]
+        },
+        {
+          "resolution": "25-1427",
+          "date": "2025-10-20",
+          "meeting": "CityCouncil",
+          "description": "25-1427 A bill for an ordinance amending Ordinance No. 400, Series of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1497",
+          "date": "2025-10-27",
+          "meeting": "CityCouncil",
+          "description": "25-1497 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1527",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "25-1527 A resolution approving a proposed Contract between the City and",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Flynn",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1372",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "25-1372 A resolution approving a proposed Third Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1590",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "25-1590 A bill for an ordinance approving the 2026 Operating Plan and",
+          "bill_result": "Ordered published",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1590",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1590 A bill for an ordinance approving the 2026 Operating Plan and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1603",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1603 A resolution of the City Council sitting as the ex officio Board of",
+          "bill_result": "Adopted",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-1891",
+          "date": "2025-12-01",
+          "meeting": "CityCouncil",
+          "description": "25-1891 A bill for an ordinance making a rescission from General Fund",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1883",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1883 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1881",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1881 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1585",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "25-1585 A resolution approving a proposed Fourth Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gilmore",
+            "Parady"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-01-06",
+        "2025-01-06",
+        "2025-01-06",
+        "2025-04-01",
+        "2025-04-21",
+        "2025-04-21",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-05-19",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-07-21",
+        "2025-09-22",
+        "2025-09-22",
+        "2025-09-22",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-20",
+        "2025-10-20",
+        "2025-11-10",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24"
+      ],
+      "lone_nay_count": 8
+    },
+    "Parady": {
+      "total_votes": 263,
+      "aye_count": 239,
+      "nay_count": 24,
+      "absent_count": 40,
+      "abstain_count": 0,
+      "nay_rate": 0.0913,
+      "nay_bills": [
+        {
+          "resolution": "24-1775",
+          "date": "2025-02-03",
+          "meeting": "CityCouncil",
+          "description": "24-1775 A resolution approving a proposed Third Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0189",
+          "date": "2025-03-03",
+          "meeting": "CityCouncil",
+          "description": "25-0189 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0191",
+          "date": "2025-03-17",
+          "meeting": "CityCouncil",
+          "description": "25-0191 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gonzales-Gutierrez"
+          ]
+        },
+        {
+          "resolution": "25-0256",
+          "date": "2025-04-01",
+          "meeting": "CityCouncil",
+          "description": "25-0256 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0556",
+          "date": "2025-05-05",
+          "meeting": "CityCouncil",
+          "description": "25-0556 A resolution approving an Amendatory Agreement with Ferkam",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0555",
+          "date": "2025-05-12",
+          "meeting": "CityCouncil",
+          "description": "25-0555 A bill for an ordinance approving a proposed Intergovernmental",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-06-09",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Suspended rules of procedure to allow late filing",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0713",
+          "date": "2025-06-23",
+          "meeting": "CityCouncil",
+          "description": "25-0713 A resolution approving a proposed Revival And Second Amendatory",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0885",
+          "date": "2025-06-30",
+          "meeting": "CityCouncil",
+          "description": "25-0885 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Hinds",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-1060 A bill for an Ordinance designating the projects to be undertaken",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Gilmore",
+            "Hinds",
+            "Kashmann",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0949",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-0949 A resolution approving a proposed Second Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1054",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-1054 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Hinds"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1137",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1137 A bill for an ordinance approving the Amended and Restated 27th",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1216",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1216 A resolution approving the Collective Bargaining Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1427",
+          "date": "2025-10-20",
+          "meeting": "CityCouncil",
+          "description": "25-1427 A bill for an ordinance amending Ordinance No. 400, Series of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1497",
+          "date": "2025-10-27",
+          "meeting": "CityCouncil",
+          "description": "25-1497 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1527",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "25-1527 A resolution approving a proposed Contract between the City and",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Flynn",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1891",
+          "date": "2025-12-01",
+          "meeting": "CityCouncil",
+          "description": "25-1891 A bill for an ordinance making a rescission from General Fund",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1883",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1883 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1881",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1881 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1585",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "25-1585 A resolution approving a proposed Fourth Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gilmore",
+            "Lewis"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-01-13",
+        "2025-01-13",
+        "2025-03-10",
+        "2025-03-10",
+        "2025-03-10",
+        "2025-03-24",
+        "2025-03-24",
+        "2025-03-24",
+        "2025-03-24",
+        "2025-04-14",
+        "2025-04-14",
+        "2025-04-14",
+        "2025-05-19",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24",
+        "2025-11-24"
+      ],
+      "lone_nay_count": 1
+    },
+    "Romero Campbell": {
+      "total_votes": 306,
+      "aye_count": 290,
+      "nay_count": 16,
+      "absent_count": 1,
+      "abstain_count": 3,
+      "nay_rate": 0.0523,
+      "nay_bills": [
+        {
+          "resolution": "24-1791",
+          "date": "2025-01-13",
+          "meeting": "CityCouncil",
+          "description": "24-1791 A bill for an ordinance amending Article V, Chapter 24 of the",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Hinds",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-05-19"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sawyer": {
+      "total_votes": 270,
+      "aye_count": 246,
+      "nay_count": 24,
+      "absent_count": 30,
+      "abstain_count": 2,
+      "nay_rate": 0.0889,
+      "nay_bills": [
+        {
+          "resolution": "24-1791",
+          "date": "2025-01-13",
+          "meeting": "CityCouncil",
+          "description": "24-1791 A bill for an ordinance amending Article V, Chapter 24 of the",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Romero Campbell",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0549",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0549 A bill for an ordinance establishing a new Fund in the \u201cGrant and",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Hinds",
+            "Romero Campbell",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0949",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "25-0949 A resolution approving a proposed Second Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0684",
+          "date": "2025-08-04",
+          "meeting": "CityCouncil",
+          "description": "25-0684 A bill for an ordinance amending the Denver Zoning Code, by",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gilmore"
+          ]
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Romero Campbell",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Flynn"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": []
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-15",
+          "meeting": "CityCouncil",
+          "description": "25-0628 A bill for an ordinance concerning recycling and organic material",
+          "bill_result": "Placed upon final consideration and do pass as amended",
+          "other_nays": [
+            "Flynn"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Alvidrez",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-01-13",
+        "2025-03-10",
+        "2025-03-10",
+        "2025-03-10",
+        "2025-03-24",
+        "2025-03-24",
+        "2025-05-12",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-09-15",
+        "2025-09-29",
+        "2025-09-29",
+        "2025-09-29",
+        "2025-09-29",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-14",
+        "2025-10-27",
+        "2025-10-27",
+        "2025-10-27",
+        "2025-10-27",
+        "2025-11-03",
+        "2025-11-17",
+        "2025-12-08"
+      ],
+      "lone_nay_count": 2
+    },
+    "Torres": {
+      "total_votes": 287,
+      "aye_count": 274,
+      "nay_count": 13,
+      "absent_count": 22,
+      "abstain_count": 0,
+      "nay_rate": 0.0453,
+      "nay_bills": [
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1014",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-1014 A bill for an ordinance submitting to a vote of the registered",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Parady",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Watson",
+            "Sandoval"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-09-08",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-11-03",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-11-17",
+        "2025-12-15"
+      ],
+      "lone_nay_count": 0
+    },
+    "Watson": {
+      "total_votes": 299,
+      "aye_count": 281,
+      "nay_count": 18,
+      "absent_count": 8,
+      "abstain_count": 0,
+      "nay_rate": 0.0602,
+      "nay_bills": [
+        {
+          "resolution": "24-1791",
+          "date": "2025-01-13",
+          "meeting": "CityCouncil",
+          "description": "24-1791 A bill for an ordinance amending Article V, Chapter 24 of the",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0549",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0549 A bill for an ordinance establishing a new Fund in the \u201cGrant and",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-05-19",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Postponed to a date certain",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-0545",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0545 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Hinds",
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Romero Campbell",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1556",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Ordered published as amended",
+          "other_nays": [
+            "Flynn"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Alvidrez",
+            "Sawyer",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Sandoval"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-06-02",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-12-01"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sandoval": {
+      "total_votes": 282,
+      "aye_count": 272,
+      "nay_count": 10,
+      "absent_count": 22,
+      "abstain_count": 0,
+      "nay_rate": 0.0355,
+      "nay_bills": [
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez",
+            "Kashmann",
+            "Lewis",
+            "Parady",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0628",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-03",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Offered",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Romero Campbell",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Alvidrez",
+            "Sawyer",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-01-06",
+        "2025-01-06",
+        "2025-01-06",
+        "2025-01-06",
+        "2025-01-06",
+        "2025-05-05",
+        "2025-05-05",
+        "2025-05-05",
+        "2025-05-05",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-06-16",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15",
+        "2025-09-15"
+      ],
+      "lone_nay_count": 0
+    },
+    "Gonzales-Gutierrez": {
+      "total_votes": 276,
+      "aye_count": 258,
+      "nay_count": 18,
+      "absent_count": 29,
+      "abstain_count": 6,
+      "nay_rate": 0.0652,
+      "nay_bills": [
+        {
+          "resolution": "25-0030",
+          "date": "2025-02-24",
+          "meeting": "CityCouncil",
+          "description": "25-0030 A bill for an ordinance changing the zoning classification for 1628",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Flynn",
+            "Hinds",
+            "Kashmann",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0191",
+          "date": "2025-03-17",
+          "meeting": "CityCouncil",
+          "description": "25-0191 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-0153",
+          "date": "2025-04-07",
+          "meeting": "CityCouncil",
+          "description": "25-0153 A bill for an ordinance changing the zoning classification for 627",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Hinds",
+            "Lewis",
+            "Romero Campbell",
+            "Sandoval",
+            "Sawyer",
+            "Torres",
+            "Watson"
+          ]
+        },
+        {
+          "resolution": "25-0548",
+          "date": "2025-06-02",
+          "meeting": "CityCouncil",
+          "description": "25-0548 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Parady",
+            "Torres"
+          ]
+        },
+        {
+          "resolution": "25-0713",
+          "date": "2025-06-23",
+          "meeting": "CityCouncil",
+          "description": "25-0713 A resolution approving a proposed Revival And Second Amendatory",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Hinds",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Kashmann",
+            "Romero"
+          ]
+        },
+        {
+          "resolution": "25-0922",
+          "date": "2025-08-11",
+          "meeting": "CityCouncil",
+          "description": "25-0922 A bill for an ordinance submitting to a vote of registered electors of",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Hinds",
+            "Kashmann"
+          ]
+        },
+        {
+          "resolution": "25-0920",
+          "date": "2025-08-18",
+          "meeting": "CityCouncil",
+          "description": "25-0920 A bill for an ordinance submitting to a vote of the qualified and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Kashmann",
+            "Lewis",
+            "Parady",
+            "Torres",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1216",
+          "date": "2025-09-08",
+          "meeting": "CityCouncil",
+          "description": "25-1216 A resolution approving the Collective Bargaining Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1497",
+          "date": "2025-10-27",
+          "meeting": "CityCouncil",
+          "description": "25-1497 A resolution approving a proposed Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1372",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "25-1372 A resolution approving a proposed Third Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis"
+          ]
+        },
+        {
+          "resolution": "unknown",
+          "date": "2025-11-10",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore",
+            "Kashmann",
+            "Lewis",
+            "Sawyer"
+          ]
+        },
+        {
+          "resolution": "25-1891",
+          "date": "2025-12-01",
+          "meeting": "CityCouncil",
+          "description": "25-1891 A bill for an ordinance making a rescission from General Fund",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Gilmore",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1881",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1881 A resolution approving a proposed Agreement between the City",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Gilmore",
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-1585",
+          "date": "2025-12-15",
+          "meeting": "CityCouncil",
+          "description": "25-1585 A resolution approving a proposed Fourth Amendatory Agreement",
+          "bill_result": "Adopted",
+          "other_nays": [
+            "Lewis",
+            "Parady"
+          ]
+        },
+        {
+          "resolution": "25-2009",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-2009 A bill for an ordinance amending Denver Revised Municipal Code",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Lewis (2) South Platte River Committee"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-1552 A bill for an ordinance approving a proposed Stadium Property",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Hinds",
+            "Kashmann",
+            "Romero Campbell",
+            "Sawyer",
+            "Torres",
+            "Watson",
+            "Sandoval"
+          ]
+        },
+        {
+          "resolution": "25-1552",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Took out of order",
+          "other_nays": [
+            "Alvidrez",
+            "Flynn",
+            "Gilmore",
+            "Hinds"
+          ]
+        }
+      ],
+      "absent_dates": [
+        "2025-05-05",
+        "2025-05-05",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-06-30",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-08-25",
+        "2025-09-15",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-10-06",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-11-10",
+        "2025-12-22",
+        "2025-12-22",
+        "2025-12-22"
+      ],
+      "lone_nay_count": 0
+    },
+    "Lewis (2) South Platte River Committee": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-2009",
+          "date": "2025-12-22",
+          "meeting": "CityCouncil",
+          "description": "25-2009 A bill for an ordinance amending Denver Revised Municipal Code",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": [
+            "Gonzales-Gutierrez"
+          ]
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 0
+    },
+    "Hinds (2) RESOLUTIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-12-15"
+      ],
+      "lone_nay_count": 0
+    },
+    "Lewis (1) Block Vote": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-1891",
+          "date": "2025-12-08",
+          "meeting": "CityCouncil",
+          "description": "25-1891 A bill for an ordinance making a rescission from General Fund",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 1
+    },
+    "Lewis (1) RESOLUTIONS": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-1594",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1594 A bill for an ordinance approving the 2026 Operating Plan and",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        }
+      ],
+      "absent_dates": [
+        "2025-04-21"
+      ],
+      "lone_nay_count": 1
+    },
+    "Parady (3) BILLS FOR FINAL CONSIDERATION": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-1714",
+          "date": "2025-11-17",
+          "meeting": "CityCouncil",
+          "description": "25-1714 A bill for an ordinance amending Ordinance 915, Series of 2025,",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Alvidrez",
+            "Gilmore"
+          ]
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 0
+    },
+    "Parady (1) PROCLAMATIONS - CONSENT": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-11-10"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sawyer (1) RESOLUTIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-10-27"
+      ],
+      "lone_nay_count": 0
+    },
+    "Kashmann (2) PRE-RECESS ANNOUNCEMENT": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-10-20"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sandoval (2) PRE-ADJOURNMENT ANNOUNCEMENT": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-09-15"
+      ],
+      "lone_nay_count": 0
+    },
+    "Romero": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-1060",
+          "date": "2025-07-28",
+          "meeting": "CityCouncil",
+          "description": "",
+          "bill_result": "Amended",
+          "other_nays": [
+            "Flynn",
+            "Gilmore",
+            "Gonzales-Gutierrez",
+            "Kashmann"
+          ]
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 0
+    },
+    "Lewis (1) PRE-ADJOURNMENT ANNOUNCEMENT": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-05-19"
+      ],
+      "lone_nay_count": 0
+    },
+    "Lewis (1) PROCLAMATIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-05-19"
+      ],
+      "lone_nay_count": 0
+    },
+    "Nay: Absent": {
+      "total_votes": 1,
+      "aye_count": 1,
+      "nay_count": 0,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [],
+      "lone_nay_count": 0
+    },
+    "Absent": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-0411",
+          "date": "2025-05-12",
+          "meeting": "CityCouncil",
+          "description": "25-0411 A bill for an ordinance changing the zoning classification for 589 &",
+          "bill_result": "Placed upon final consideration and do pass",
+          "other_nays": []
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 1
+    },
+    "Sawyer (1) Block Vote": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-05-12"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sawyer (1) PROCLAMATIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-05-12"
+      ],
+      "lone_nay_count": 0
+    },
+    "Parady (1) RESOLUTIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 2,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-01-13",
+        "2025-04-14"
+      ],
+      "lone_nay_count": 0
+    },
+    "Kashmann (2) PRE-ADJOURNMENT ANNOUNCEMENT": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-04-07"
+      ],
+      "lone_nay_count": 0
+    },
+    "Hinds (1) RESOLUTIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-04-01"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sawyer (2) Block Vote": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-03-24"
+      ],
+      "lone_nay_count": 0
+    },
+    "Sawyer (2) RESOLUTIONS": {
+      "total_votes": 0,
+      "aye_count": 0,
+      "nay_count": 0,
+      "absent_count": 1,
+      "abstain_count": 0,
+      "nay_rate": 0.0,
+      "nay_bills": [],
+      "absent_dates": [
+        "2025-03-24"
+      ],
+      "lone_nay_count": 0
+    },
+    "Parady (2) Block Vote": {
+      "total_votes": 1,
+      "aye_count": 0,
+      "nay_count": 1,
+      "absent_count": 0,
+      "abstain_count": 0,
+      "nay_rate": 1.0,
+      "nay_bills": [
+        {
+          "resolution": "25-0167",
+          "date": "2025-03-03",
+          "meeting": "CityCouncil",
+          "description": "25-0167 A bill for an ordinance authorizing a capital equipment purchase",
+          "bill_result": "Ordered published",
+          "other_nays": [
+            "Lewis"
+          ]
+        }
+      ],
+      "absent_dates": [],
+      "lone_nay_count": 0
+    }
+  }
+}
