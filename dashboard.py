@@ -294,26 +294,30 @@ def _source_card(i, chunk):
                    style={"fontSize": "0.81rem", "color": "#4B5563",
                           "marginBottom": "10px", "lineHeight": "1.5"}),
 
-            dbc.ButtonGroup([
-                dbc.Button(
+            html.Div([
+                html.A(
                     [html.I(className="bi bi-file-text me-1"), "View Document"],
-                    href=build_datasette_url(chunk["meeting"], chunk["date"], chunk["page"]),
+                    href=build_datasette_url(
+                        str(chunk.get("meeting") or ""),
+                        str(chunk.get("date")    or ""),
+                        chunk.get("page") or "",
+                    ),
                     target="_blank",
-                    color="primary",
-                    size="sm",
-                    outline=True,
+                    className="btn btn-sm btn-outline-primary me-1",
                     style={"fontSize": "0.72rem"},
                 ),
-                dbc.Button(
+                html.A(
                     [html.I(className="bi bi-image me-1"), "View Page Image"],
-                    href=build_image_url(chunk["meeting"], chunk["date"], chunk["page"]),
+                    href=build_image_url(
+                        str(chunk.get("meeting") or ""),
+                        str(chunk.get("date")    or ""),
+                        chunk.get("page") or "",
+                    ),
                     target="_blank",
-                    color="secondary",
-                    size="sm",
-                    outline=True,
+                    className="btn btn-sm btn-outline-secondary",
                     style={"fontSize": "0.72rem"},
                 ),
-            ], size="sm"),
+            ], className="d-flex flex-wrap gap-1"),
         ], style={"padding": "12px 14px"}),
     ], style={"border": f"1px solid {BORDER}", "borderRadius": "8px",
               "boxShadow": "0 1px 3px rgba(0,0,0,.05)", "height": "100%"})
