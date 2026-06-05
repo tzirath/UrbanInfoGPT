@@ -45,6 +45,9 @@ Rules:
 - Always mention specific dates, dollar amounts, and resolution numbers
 - Keep answers concise and factual
 - Do not speculate or add information not in the provided data
+- When resolution details are provided under 'RESOLUTION DETAILS', use them
+  to give specific context about what each resolution involved. Always name
+  the resolution AND describe what it was about — never just cite the number.
 - End your answer with a "Sources" section listing the dates and pages used
 """
 

@@ -16,6 +16,14 @@ import plotly.graph_objects as go
 import pipeline
 from query import query
 from llm import get_answer
+try:
+    from agents.query_refiner import refined_search, get_last_refined_queries
+except Exception as _ref_err:
+    print(f"Query refinement unavailable: {_ref_err}")
+    def refined_search(question, n_results=5, **kw):
+        return query(question, n_results=n_results, **kw)
+    def get_last_refined_queries():
+        return []
 
 try:
     from analytics import load_analytics
@@ -470,8 +478,9 @@ app.layout = html.Div([
         # ── Results ──────────────────────────────────────
         html.Div([
             dcc.Loading(id="loading", type="dot", color=BLUE, children=[
-                html.Div(id="answer-panel",  className="mb-3"),
-                html.Div(id="sources-panel", className="mb-2"),
+                html.Div(id="answer-panel",          className="mb-3"),
+                html.Div(id="sources-panel",         className="mb-2"),
+                html.Div(id="search-strategy-panel", className="mb-2"),
             ]),
         ], style={"maxWidth": "900px", "margin": "0 auto"}),
 
@@ -657,6 +666,40 @@ app.layout = html.Div([
     dcc.Interval(id="poll-interval", interval=1000, n_intervals=0, disabled=True),
 
 ], style={"fontFamily": "Inter, system-ui, sans-serif", "backgroundColor": BG})
+
+
+# ── SEARCH STRATEGY PANEL ────────────────────────────────────
+
+def _search_strategy_panel(original_question: str, queries: list):
+    """Subtle collapsible showing which queries were actually run."""
+    other = [q for q in queries if q.lower() != original_question.lower()]
+    if not other:
+        return ""
+    return html.Details([
+        html.Summary(
+            [html.I(className="bi bi-search me-1"), "Search strategy"],
+            style={"fontSize": "0.76rem", "fontWeight": "500",
+                   "color": SLATE, "cursor": "pointer",
+                   "listStyle": "none", "display": "flex",
+                   "alignItems": "center", "gap": "4px"},
+        ),
+        html.Div([
+            html.Div([
+                html.Span("Original: ", style={"fontWeight": "600"}),
+                f'"{original_question}"',
+            ], style={"fontSize": "0.77rem", "color": "#4B5563",
+                      "marginBottom": "6px"}),
+            html.Div("Also searched for:",
+                     style={"fontSize": "0.77rem", "fontWeight": "600",
+                            "color": NAVY, "marginBottom": "4px"}),
+            *[html.Div([html.Span("• ", style={"color": BLUE}), q],
+                       style={"fontSize": "0.77rem", "color": "#4B5563",
+                              "paddingLeft": "8px"})
+              for q in other],
+        ], style={"padding": "8px 12px", "marginTop": "6px",
+                  "backgroundColor": "#F8FAFC", "borderRadius": "6px",
+                  "border": f"1px solid {BORDER}"}),
+    ], style={"padding": "2px 0"})
 
 
 # ── CALLBACKS ────────────────────────────────────────────────
@@ -906,8 +949,9 @@ def handle_indexing(index_click, n_intervals,
 
 # 9. Run query
 @app.callback(
-    Output("answer-panel",  "children"),
-    Output("sources-panel", "children"),
+    Output("answer-panel",          "children"),
+    Output("sources-panel",         "children"),
+    Output("search-strategy-panel", "children"),
     Input("ask-button", "n_clicks"),
     State("question-input",   "value"),
     State("filter-start",      "value"),
@@ -925,6 +969,7 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                       color="warning",
                       className="d-flex align-items-center"),
             "",
+            "",
         )
 
     coll_name = (coll_data or {}).get("collection_name")
@@ -937,9 +982,10 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
                       color="info",
                       className="d-flex align-items-center"),
             "",
+            "",
         )
 
-    chunks = query(
+    chunks = refined_search(
         question,
         n_results=5,
         collection_name=coll_name,
@@ -948,16 +994,25 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
         meeting_types=f_types or None,
         content_type=f_content or None,
     )
+    refined_queries = get_last_refined_queries()
 
     if not chunks:
         return (
             dbc.Alert("No results found for this query. Try broadening your filters.",
                       color="warning"),
             "",
+            "",
         )
 
-    # Analytics routing
-    analytics_ctx, qtype = get_analytics_context(question, _analytics) \
+    # Analytics routing — pass active filters so resolution lookups are scoped
+    rag_filters = {
+        "collection_name": coll_name,
+        "date_from":       f_start or None,
+        "date_to":         f_end   or None,
+        "meeting_types":   f_types or None,
+    }
+    analytics_ctx, qtype = get_analytics_context(question, _analytics,
+                                                  filters=rag_filters) \
         if _analytics else (None, "rag")
 
     answer = get_answer(question, chunks, analytics_context=analytics_ctx)
@@ -1032,7 +1087,9 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
     else:
         sources = ""
 
-    return answer_card, sources
+    strategy = _search_strategy_panel(question, refined_queries)
+
+    return answer_card, sources, strategy
 
 
 # ── RUN ──────────────────────────────────────────────────────

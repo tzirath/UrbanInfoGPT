@@ -5,6 +5,9 @@ to be passed to Claude alongside RAG chunks.
 """
 import re
 
+RESOLUTION_PATTERN = re.compile(r'\b(\d{2}-\d{4})\b')
+MAX_AUTO_LOOKUPS = 3  # controls cost — ChromaDB only, no LLM calls
+
 
 # ── Question type detection ──────────────────────────────────
 
@@ -167,9 +170,58 @@ def format_financial_context(question: str, financials_data: dict) -> str:
     return "\n".join(lines)
 
 
+# ── Resolution context enrichment ────────────────────────────
+
+def enrich_with_resolution_context(analytics_context: str,
+                                    filters: dict = None) -> str:
+    """
+    Scans analytics_context for resolution numbers (e.g. 25-0713).
+    Runs a targeted RAG search for each one found.
+    Returns the enriched context string.
+
+    Cost: up to MAX_AUTO_LOOKUPS ChromaDB searches — no LLM calls.
+    """
+    if not analytics_context:
+        return analytics_context
+
+    resolutions = list(set(RESOLUTION_PATTERN.findall(analytics_context)))
+    if not resolutions:
+        return analytics_context
+
+    # Lazy import avoids loading heavy ML models when analytics runs standalone
+    from query import query as rag_query
+
+    enrichments = []
+    for resolution in resolutions[:MAX_AUTO_LOOKUPS]:
+        try:
+            results = rag_query(
+                f"resolution {resolution}",
+                n_results=2,
+                **(filters or {}),
+            )
+            good_results = [r for r in results if r["score"] > 0.15]
+            if good_results:
+                best = good_results[0]
+                description = best["text"][:300].strip()
+                enrichments.append(
+                    f"\nContext for Resolution {resolution} "
+                    f"({best['date']}, Page {best['page']}):\n"
+                    f"{description}..."
+                )
+        except Exception as e:
+            print(f"Auto-lookup failed for {resolution}: {e}")
+            continue
+
+    if not enrichments:
+        return analytics_context
+
+    return analytics_context + "\n\nRESOLUTION DETAILS:\n" + "\n".join(enrichments)
+
+
 # ── Public entry point ───────────────────────────────────────
 
-def get_analytics_context(question: str, analytics_data: dict) -> tuple:
+def get_analytics_context(question: str, analytics_data: dict,
+                           filters: dict = None) -> tuple:
     """
     Returns (context_string | None, question_type).
     context_string is passed to Claude alongside RAG chunks.
@@ -182,10 +234,14 @@ def get_analytics_context(question: str, analytics_data: dict) -> tuple:
 
     if qtype == "votes":
         ctx = format_vote_context(question, analytics_data.get("votes") or {})
+        if ctx:
+            ctx = enrich_with_resolution_context(ctx, filters=filters)
         return (ctx or None), "votes"
 
     if qtype == "financial":
         ctx = format_financial_context(question, analytics_data.get("financials") or {})
+        if ctx:
+            ctx = enrich_with_resolution_context(ctx, filters=filters)
         return (ctx or None), "financial"
 
     return None, "rag"
