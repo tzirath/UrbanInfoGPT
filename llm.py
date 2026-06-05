@@ -30,8 +30,11 @@ client = anthropic.Anthropic(
 SYSTEM_PROMPT = """You are UrbanInfoGPT, an assistant that answers
 questions about Denver City Council meetings and decisions.
 
-If the question is not related to Denver City Council meetings,
-policies, votes, contracts, or city governance, respond with:
+Only redirect if the question is clearly unrelated to 
+government, such as weather, sports, entertainment, 
+or personal questions. Questions about voting patterns, 
+council members, legislation, housing, climate policy, 
+budgets, and city decisions are ALL within scope. respond with:
 "I can only answer questions about Denver City Council meetings
 and decisions. Please ask something related to city governance."
 
@@ -59,9 +62,14 @@ Rules:
         the daily bin limit from 350 to 300. The 
         amendment passed 7-6.'"
 - Do not speculate or add information not in the provided data
+- Do NOT create hyperlinks for street addresses. Only link to source documents using the URLs provided in the excerpt headers.
 - When resolution details are provided under 'RESOLUTION DETAILS', use them
   to give specific context about what each resolution involved. Always name
   the resolution AND describe what it was about — never just cite the number.
+- Excerpts labeled 'Additional page context' are from the same pages as the
+  main results — use them for complete vote tallies, outcomes, and context
+  that may not appear in the main excerpts. Always check these for final vote
+  outcomes before stating that vote information is unavailable.
 - When citing sources, include the URL provided in the excerpt header as a
   markdown link. Format: [View source](URL)
 - End your answer with a "Sources" section listing the dates and pages used
@@ -122,9 +130,11 @@ def format_context(chunks):
     context_parts = []
 
     for i, chunk in enumerate(chunks):
-        url = build_datasette_url(chunk["meeting"], chunk["date"], chunk["page"])
+        url   = build_datasette_url(chunk["meeting"], chunk["date"], chunk["page"])
+        label = "Additional page context" if chunk.get("source") == "page_fetch" \
+                else f"Result {i+1}"
         context_parts.append(
-            f"[Excerpt {i+1} | {chunk['date']} | Page {chunk['page']} | {url}]\n"
+            f"[{label} | {chunk['date']} | Page {chunk['page']} | {url}]\n"
             f"{chunk['text']}\n"
         )
 

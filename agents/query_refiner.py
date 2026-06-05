@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 import anthropic
 
-from query import query
+from query import query, fetch_full_pages
 
 load_dotenv()
 
@@ -104,7 +104,7 @@ def refined_search(question: str, n_results: int = 5, **filters) -> list:
     all_results = []
     for q in unique_queries:
         try:
-            results = query(q, n_results=10, **filters)
+            results = query(q, n_results=10, use_page_fetch=False, **filters)
             for r in results:
                 r["found_by_query"] = q
             all_results.extend(results)
@@ -113,8 +113,8 @@ def refined_search(question: str, n_results: int = 5, **filters) -> list:
             continue
 
     if not all_results:
-        # Complete fallback
-        return query(question, n_results=n_results, **filters)
+        # Complete fallback — use_page_fetch=True on the single fallback call
+        return query(question, n_results=n_results, use_page_fetch=True, **filters)
 
     # Deduplicate by chunk text, keeping highest score per unique chunk
     seen_texts: set = set()
@@ -125,4 +125,8 @@ def refined_search(question: str, n_results: int = 5, **filters) -> list:
             seen_texts.add(text_key)
             unique_results.append(r)
 
-    return unique_results[:n_results]
+    final = unique_results[:n_results]
+
+    # One page-fetch pass on the final merged results
+    coll = filters.get("collection_name")
+    return fetch_full_pages(final, collection_name=coll)

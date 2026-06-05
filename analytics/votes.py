@@ -37,6 +37,19 @@ RES_DESC_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Second-pass: Aye: blocks NOT preceded by "following vote:"
+_BARE_AYE_RE = re.compile(r'\nAye:\s*', re.IGNORECASE)
+
+_RESULT_KEYWORD_MAP = [
+    (r'final consideration and do pass', 'Passed'),
+    (r'failed',                          'Failed'),
+    (r'amended',                         'Amended'),
+    (r'postponed',                       'Postponed'),
+    (r'adopted',                         'Adopted'),
+    (r'approved',                        'Approved'),
+    (r'en bloc',                         'En Bloc'),
+]
+
 
 # ── Name parsing ─────────────────────────────────────────────
 
@@ -138,6 +151,75 @@ def _parse_vote_blocks(text: str, row_date: str, row_meeting: str) -> list:
     return records
 
 
+# ── Second-pass parser: formats without "following vote:" ────
+
+def _parse_direct_vote_blocks(text: str, row_date: str, row_meeting: str) -> list:
+    """
+    Catches vote blocks NOT anchored by 'following vote:'.
+    Handles: 'Placed upon final consideration', 'Failed',
+    'Amended', 'Postponed', 'Adopted', 'Approved', en-bloc.
+    """
+    records = []
+    seen    = set()
+
+    for m in _BARE_AYE_RE.finditer(text):
+        # Skip if already captured by the "following vote:" parser
+        pre = text[max(0, m.start() - 700): m.start()]
+        if 'following vote:' in pre.lower():
+            continue
+
+        # Determine result from the 200 chars immediately preceding Aye:
+        result = 'Unknown'
+        pre200 = pre[-200:]
+        for keyword, label in _RESULT_KEYWORD_MAP:
+            if re.search(keyword, pre200, re.IGNORECASE):
+                result = label
+                break
+
+        # Parse the vote block (everything after "Aye: ")
+        block   = text[m.end(): m.end() + 500]
+        nay_m   = re.search(r'\nNay:\s*(.*?)(?=\nAbsent:|\nAbstain:|\n\n|\Z)', block, re.DOTALL)
+        if not nay_m:
+            continue  # malformed — no Nay: line
+
+        aye_text   = block[:nay_m.start()]
+        nay_text   = nay_m.group(1)
+        absent_m   = re.search(r'\nAbsent:\s*(.*?)(?=\nAbstain:|\n\n|\Z)', block, re.DOTALL)
+        absent_text = absent_m.group(1) if absent_m else ''
+
+        ayes   = _parse_names(aye_text)
+        nays   = _parse_names(nay_text)
+        absent = _parse_names(absent_text)
+
+        if not ayes:
+            continue
+
+        dedup = (frozenset(ayes), frozenset(nays), result)
+        if dedup in seen:
+            continue
+        seen.add(dedup)
+
+        # Nearest resolution number in the 600 chars before Aye:
+        pre600      = text[max(0, m.start() - 600): m.start()]
+        res_matches = list(RES_REF_RE.finditer(pre600))
+        if not res_matches:
+            res_matches = list(RES_DESC_RE.finditer(pre600))
+        res_num = res_matches[-1].group(1) if res_matches else None
+
+        records.append({
+            'resolution': res_num,
+            'result':     result,
+            'ayes':       ayes,
+            'nays':       nays,
+            'absent':     absent,
+            'abstain':    [],
+            'date':       row_date,
+            'meeting':    row_meeting,
+        })
+
+    return records
+
+
 # ── Main build function ──────────────────────────────────────
 
 def build_vote_analytics() -> dict:
@@ -158,10 +240,20 @@ def build_vote_analytics() -> dict:
 
     for row in all_rows:
         text = row.get('text', '')
-        if not text or 'following vote:' not in text.lower():
+        if not text:
+            continue
+        has_fv  = 'following vote:' in text.lower()
+        has_aye = '\naye:'           in text.lower()
+        if not (has_fv or has_aye):
             continue
 
-        for record in _parse_vote_blocks(text, row['date'], row.get('meeting', '')):
+        raw_records: list = []
+        if has_fv:
+            raw_records.extend(_parse_vote_blocks(text, row['date'], row.get('meeting', '')))
+        if has_aye:
+            raw_records.extend(_parse_direct_vote_blocks(text, row['date'], row.get('meeting', '')))
+
+        for record in raw_records:
             # Global dedup: same voter composition + result + date = same vote
             key = (record['date'], frozenset(record['ayes']),
                    frozenset(record['nays']), record['result'])

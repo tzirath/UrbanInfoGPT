@@ -103,6 +103,78 @@ def _date_bounds(date_from, date_to):
     return lo, hi
 
 
+# ── Page fetcher ─────────────────────────────────────────────
+
+def fetch_full_pages(chunks: list, collection_name: str = None,
+                     max_pages: int = 3) -> list:
+    """
+    For the top max_pages unique (date, page, meeting) combos in chunks,
+    fetch ALL other chunks from those pages via ChromaDB get().
+    Returns original scored chunks first, then page-fetched extras sorted
+    by date/page. Fails silently — never raises.
+    """
+    if not chunks:
+        return chunks
+
+    col = _default_collection
+    if collection_name:
+        try:
+            col = _client.get_collection(collection_name)
+        except Exception:
+            pass
+    if col is None:
+        return chunks
+
+    seen_pages: set = set()
+    top_pages:  list = []
+    for chunk in chunks:
+        key = (chunk["date"], chunk["page"], chunk["meeting"])
+        if key not in seen_pages:
+            seen_pages.add(key)
+            top_pages.append(key)
+        if len(top_pages) >= max_pages:
+            break
+
+    all_chunks      = list(chunks)
+    seen_text_keys  = {c["text"][:100] for c in chunks}
+
+    for date, page, meeting in top_pages:
+        try:
+            page_results = col.get(
+                where={"$and": [
+                    {"date":    {"$eq": date}},
+                    {"page":    {"$eq": page}},
+                    {"meeting": {"$eq": meeting}},
+                ]},
+                include=["documents", "metadatas"],
+            )
+            docs  = page_results.get("documents") or []
+            metas = page_results.get("metadatas") or []
+            for doc, meta in zip(docs, metas):
+                key = doc[:100]
+                if key not in seen_text_keys:
+                    seen_text_keys.add(key)
+                    all_chunks.append({
+                        "text":              doc,
+                        "date":              meta.get("date", ""),
+                        "meeting":           meta.get("meeting", ""),
+                        "page":              meta.get("page", ""),
+                        "resolution_number": meta.get("resolution_number") or None,
+                        "content_type":      meta.get("content_type", "other"),
+                        "score":             0.0,
+                        "semantic_score":    0.0,
+                        "bm25_score":        0.0,
+                        "source":            "page_fetch",
+                    })
+        except Exception as e:
+            print(f"Page fetch failed for {date} p{page}: {e}")
+
+    scored  = [c for c in all_chunks if c.get("source") != "page_fetch"]
+    fetched = [c for c in all_chunks if c.get("source") == "page_fetch"]
+    fetched.sort(key=lambda x: (x["date"], str(x["page"])))
+    return scored + fetched
+
+
 # ── Main hybrid query function ────────────────────────────────
 
 def query(
@@ -113,6 +185,7 @@ def query(
     date_to=None,
     meeting_types=None,
     content_type=None,
+    use_page_fetch=True,
 ):
     """
     Hybrid BM25 + semantic search with adaptive weighting.
@@ -220,7 +293,12 @@ def query(
         merged.append(entry)
 
     merged.sort(key=lambda x: x["score"], reverse=True)
-    return merged[:n_results]
+    results = merged[:n_results]
+
+    if use_page_fetch and results:
+        results = fetch_full_pages(results, collection_name=collection_name)
+
+    return results
 
 
 # ── CLI testing ──────────────────────────────────────────────
