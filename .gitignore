@@ -221,3 +221,6 @@ __marimo__/
 data/chroma/
 data/bm25/
 data/cache/
+
+# Local Claude context — not for public repo
+CLAUDE.md
