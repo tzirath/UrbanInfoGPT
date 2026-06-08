@@ -54,10 +54,9 @@ def _log(msg):
         )
         if is_progress:
             lines[-1] = msg
-            print(f"\r  {msg}          ", end="", flush=True)
         else:
             lines.append(msg)
-            print(f"  {msg}", flush=True)
+        print(f"  {msg}", flush=True)
 
 
 def _set(**kw):
