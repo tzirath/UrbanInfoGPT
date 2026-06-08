@@ -1,4 +1,5 @@
 import re
+import bisect
 from typing import List, Tuple, Dict
 
 # Matches the start of a new agenda item, e.g. "\n25-0545 A resolution..."
@@ -29,8 +30,10 @@ def _split_at_sentences(text: str, max_size: int, overlap: int) -> List[str]:
             if tail:
                 chunks.append(tail)
             break
-        # Last sentence boundary within the window
-        best = max((p for p in ends if start < p <= end), default=None)
+        # Last sentence boundary within the window — O(log n) via bisect
+        lo   = bisect.bisect_right(ends, start)
+        hi   = bisect.bisect_right(ends, end)
+        best = ends[hi - 1] if hi > lo else None
         if best:
             c = text[start:best].strip()
             if c:
