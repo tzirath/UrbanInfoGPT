@@ -1,16 +1,14 @@
 """
-Indexes Denver City Council meeting history (2020-2024).
-2025 CityCouncil data is already indexed in "denver_all".
+Indexes Denver City Council meeting history quarter by quarter.
 
-Designed to run overnight — safe to interrupt and resume.
-Checks the manifest before each year to skip already-indexed data.
-Re-running is idempotent: deterministic chunk IDs mean upsert
-never creates duplicates even if the manifest check is bypassed.
+Indexing a full year at once ran out of RAM (zsh: killed).
+Quarters (~250 rows each) fit comfortably in memory.
+
+Safe to interrupt and resume — each quarter is checked against
+the manifest before fetching, so nothing is re-indexed.
 
 Usage:
-    python scripts/index_history.py
-
-To add committee data after CityCouncil completes, change MEETING_TYPES.
+    python -u scripts/index_history.py
 """
 import sys
 import os
@@ -18,26 +16,18 @@ import time
 import json
 from datetime import date as _date
 
-# Project root is one level above scripts/
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 from pipeline import run_pipeline, MANIFEST_PATH
 
 # ── CONFIGURATION ──────────────────────────────────────────────
-# Oldest-first keeps the manifest growing chronologically.
 YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024, 2025, 2026]
-
-# Start with CityCouncil only — largest and most analytically valuable.
-# Add committees by updating this list after CityCouncil finishes.
-MEETING_TYPES = ["CityCouncil"]
-
-# Seconds to pause between years (polite to the remote API).
-PAUSE_BETWEEN_YEARS = 3
+MEETING_TYPES  = ["CityCouncil"]
+PAUSE_SECONDS  = 2   # pause between quarters
 
 
-# ── MANIFEST HELPERS ───────────────────────────────────────────
+# ── HELPERS ────────────────────────────────────────────────────
 
 def load_manifest():
     if not os.path.exists(MANIFEST_PATH):
@@ -46,69 +36,57 @@ def load_manifest():
         return json.load(f)
 
 
-def is_already_indexed(year: int, meeting_types: list, manifest: dict) -> bool:
+def quarters_for_year(year: int):
     """
-    True if every meeting type for this year already appears in the manifest.
-    Manifest stores dates as 'YYYY-MM' (e.g. '2024-01', '2024-12').
-    For the current year we only check date_from so a month advance
-    (e.g. 2026-05 → 2026-06) triggers a fresh index run.
+    Returns list of (date_from, date_to) quarter strings for the year.
+    Current year is trimmed to the current month.
     """
-    today = _date.today()
+    today   = _date.today()
+    all_q   = [
+        (f"{year}-01", f"{year}-03"),
+        (f"{year}-04", f"{year}-06"),
+        (f"{year}-07", f"{year}-09"),
+        (f"{year}-10", f"{year}-12"),
+    ]
+    if year != today.year:
+        return all_q
+
+    result = []
+    for q_from, q_to in all_q:
+        if int(q_from[5:7]) > today.month:
+            break
+        if int(q_to[5:7]) > today.month:
+            q_to = f"{year}-{today.month:02d}"
+        result.append((q_from, q_to))
+    return result
+
+
+def is_quarter_indexed(date_from, date_to, meeting_types, manifest):
     for mt in meeting_types:
-        found = False
-        for seg in manifest.get("segments", []):
-            date_from_match = seg.get("date_from") == f"{year}-01"
-            date_to_match   = (
-                seg.get("date_to") == _date_to_for_year(year)
-                if year == today.year
-                else seg.get("date_to") == f"{year}-12"
-            )
-            if mt in seg.get("meeting_types", []) and date_from_match and date_to_match:
-                found = True
-                break
+        found = any(
+            mt in seg.get("meeting_types", [])
+            and seg.get("date_from") == date_from
+            and seg.get("date_to")   == date_to
+            for seg in manifest.get("segments", [])
+        )
         if not found:
             return False
     return True
 
 
-# ── INDEXING ───────────────────────────────────────────────────
-
-def _date_to_for_year(year: int) -> str:
-    """December for past years; current month for the current year."""
-    today = _date.today()
-    if year == today.year:
-        return f"{year}-{today.month:02d}"
-    return f"{year}-12"
-
-
-def index_year(year: int, meeting_types: list):
-    """
-    Index one calendar year (or year-to-date for the current year).
-    Returns (success: bool, chunks_added: int).
-    """
-    date_from = f"{year}-01"
-    date_to   = _date_to_for_year(year)
-
-    print(f"\n{'═' * 52}")
-    print(f"  Indexing {year}  |  {', '.join(meeting_types)}")
-    print(f"{'═' * 52}")
-
+def index_quarter(date_from, date_to, meeting_types):
+    """Run pipeline for one quarter. Returns (success, chunks_added)."""
+    print(f"\n  ── {date_from} → {date_to} ──────────────────")
     start = time.time()
     try:
-        result = run_pipeline(
-            meeting_types=meeting_types,
-            date_from=date_from,
-            date_to=date_to,
-        )
+        result  = run_pipeline(meeting_types=meeting_types,
+                               date_from=date_from, date_to=date_to)
         elapsed = time.time() - start
         chunks  = result.get("chunks_added", 0)
-        print(f"  ✓ {year} done in {elapsed / 60:.1f} min  |  {chunks:,} chunks added")
+        print(f"  ✓ Done in {elapsed/60:.1f} min  |  {chunks:,} chunks")
         return True, chunks
-
     except Exception as e:
-        elapsed = time.time() - start
-        print(f"  ✗ {year} FAILED after {elapsed / 60:.1f} min: {e}")
-        print(f"    Continuing with next year...")
+        print(f"  ✗ FAILED: {e}")
         return False, 0
 
 
@@ -116,89 +94,70 @@ def index_year(year: int, meeting_types: list):
 
 if __name__ == "__main__":
     print("\n" + "═" * 52)
-    print("  UrbanInfoGPT — History Indexer")
-    print("  Denver City Council  2020 → 2024")
+    print("  UrbanInfoGPT — History Indexer (by quarter)")
     print("═" * 52)
 
-    manifest = load_manifest()
-
-    # ── Preview ───────────────────────────────────────────────
-    to_index = []
-    to_skip  = []
+    # Build full work list
+    all_quarters = []
     for year in YEARS_TO_INDEX:
-        if is_already_indexed(year, MEETING_TYPES, manifest):
-            to_skip.append(year)
-        else:
-            to_index.append(year)
+        for q in quarters_for_year(year):
+            all_quarters.append((year, q[0], q[1]))
 
-    print("\nPlan:")
-    for year in to_index:
-        print(f"  ▶  {year}  ({', '.join(MEETING_TYPES)})")
-    for year in to_skip:
-        print(f"  ⏭  {year}  (already in manifest — skipping)")
+    # Preview
+    manifest  = load_manifest()
+    to_do     = [(y, f, t) for y, f, t in all_quarters
+                 if not is_quarter_indexed(f, t, MEETING_TYPES, manifest)]
+    to_skip   = len(all_quarters) - len(to_do)
 
-    if not to_index:
-        print("\nAll years already indexed. Nothing to do.")
-        print("Next: python scripts/run_analytics.py")
+    print(f"\n  {len(all_quarters)} quarters total  |  "
+          f"{len(to_do)} to index  |  {to_skip} already done\n")
+    for _, f, t in to_do:
+        print(f"  ▶  {f} → {t}")
+
+    if not to_do:
+        print("\nAll quarters indexed. Nothing to do.")
+        print("Run: python scripts/run_analytics.py")
         sys.exit(0)
 
-    est_min = len(to_index) * 15   # rough: ~15 min per year on Mac CPU
-    print(f"\nEstimated time: ~{est_min} min  ({est_min / 60:.1f} h)")
-    print("Safe to leave running overnight.")
-    print("\nStarting in 5 seconds…  (Ctrl+C to cancel)")
+    est_min = len(to_do) * 5
+    print(f"\n  Estimated: ~{est_min} min  ({est_min/60:.1f} h)")
+    print("  Starting in 5 seconds…  (Ctrl+C to cancel)")
     time.sleep(5)
 
-    # ── Run ───────────────────────────────────────────────────
-    total_start = time.time()
-    succeeded   = []
-    failed      = []
-    skipped     = []
-    total_added = 0
+    # Index
+    total_start   = time.time()
+    total_chunks  = 0
+    failed        = []
+    current_year  = None
 
-    for i, year in enumerate(YEARS_TO_INDEX):
-        # Re-read manifest each iteration in case a prior year just wrote it.
+    for year, date_from, date_to in to_do:
+        if year != current_year:
+            current_year = year
+            print(f"\n{'═' * 52}")
+            print(f"  {year}")
+            print(f"{'═' * 52}")
+
         manifest = load_manifest()
-
-        if is_already_indexed(year, MEETING_TYPES, manifest):
-            print(f"\n  ⏭  Skipping {year} (already indexed)")
-            skipped.append(year)
+        if is_quarter_indexed(date_from, date_to, MEETING_TYPES, manifest):
+            print(f"  ⏭  {date_from} → {date_to} (already indexed)")
             continue
 
-        ok, chunks = index_year(year, MEETING_TYPES)
-
+        ok, chunks = index_quarter(date_from, date_to, MEETING_TYPES)
         if ok:
-            succeeded.append(year)
-            total_added += chunks
+            total_chunks += chunks
         else:
-            failed.append(year)
+            failed.append(f"{date_from}→{date_to}")
 
-        # Pause between years (not after the last one).
-        remaining = [y for y in YEARS_TO_INDEX[i + 1:] if y not in skipped]
-        if remaining:
-            print(f"\n  Pausing {PAUSE_BETWEEN_YEARS}s before {remaining[0]}…")
-            time.sleep(PAUSE_BETWEEN_YEARS)
+        time.sleep(PAUSE_SECONDS)
 
-    # ── Summary ───────────────────────────────────────────────
     elapsed_total = time.time() - total_start
-
     print(f"\n{'═' * 52}")
-    print(f"  INDEXING COMPLETE")
-    print(f"{'═' * 52}")
-    print(f"  Total time : {elapsed_total / 60:.0f} min")
-    print(f"  Chunks added: {total_added:,}")
-    print(f"  Succeeded : {succeeded}")
-    print(f"  Skipped   : {skipped}")
-
+    print(f"  DONE  |  {elapsed_total/60:.0f} min  |  {total_chunks:,} chunks added")
     if failed:
-        print(f"  ⚠  Failed  : {failed}")
-        print(f"     Re-run this script to retry failed years.")
-
-    print(f"\n{'═' * 52}")
-    print("  NEXT STEPS")
-    print("  1. Rebuild analytics with full history:")
-    print("       python scripts/run_analytics.py")
-    print("  2. Clear answer cache:")
-    print("       python scripts/clear_cache.py")
-    print("  3. Restart dashboard:")
-    print("       python dashboard.py")
+        print(f"  ⚠  Failed quarters: {failed}")
+        print(f"     Re-run to retry.")
+    print(f"\n  Next steps:")
+    print(f"    python scripts/run_analytics.py")
+    print(f"    python scripts/clear_cache.py")
+    print(f"    python dashboard.py")
     print(f"{'═' * 52}\n")
