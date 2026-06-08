@@ -38,7 +38,8 @@ def _split_at_sentences(text: str, max_size: int, overlap: int) -> List[str]:
             c = text[start:best].strip()
             if c:
                 chunks.append(c)
-            start = max(0, best - overlap)
+            nxt = best - overlap
+            start = nxt if nxt > start else best
         else:
             # No sentence boundary — cut at last word boundary
             wb = text.rfind(' ', start, end)
@@ -46,7 +47,8 @@ def _split_at_sentences(text: str, max_size: int, overlap: int) -> List[str]:
             c = text[start:cut].strip()
             if c:
                 chunks.append(c)
-            start = max(0, cut - overlap)
+            nxt = cut - overlap
+            start = nxt if nxt > start else cut
     return chunks
 
 
