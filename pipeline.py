@@ -48,14 +48,16 @@ def reset():
 def _log(msg):
     with _lock:
         lines = _state["lines"]
-        # Update last line in-place for repeated progress lines
-        if lines and (
-            (msg.startswith("Creating embeddings") and lines[-1].startswith("Creating embeddings")) or
-            ("rows so far" in msg and "rows so far" in lines[-1])
-        ):
+        is_progress = (
+            (msg.startswith("Creating embeddings") and lines and lines[-1].startswith("Creating embeddings")) or
+            ("rows so far" in msg and lines and "rows so far" in lines[-1])
+        )
+        if is_progress:
             lines[-1] = msg
+            print(f"\r  {msg}          ", end="", flush=True)
         else:
             lines.append(msg)
+            print(f"  {msg}", flush=True)
 
 
 def _set(**kw):

@@ -602,6 +602,18 @@ def analytics_layout():
             ], className="vote-bar"),
         ], className="contested-card")
 
+    # Available years (from contract dates + vote dates)
+    _year_set = set()
+    for c in f.get("contracts", []):
+        if c.get("date"):
+            _year_set.add(c["date"][:4])
+    for stats in members.values():
+        for b in stats.get("nay_bills", []):
+            if b.get("date"):
+                _year_set.add(b["date"][:4])
+    years_available   = sorted(_year_set, reverse=True)
+    year_filter_opts  = [{"label": y, "value": y} for y in years_available]
+
     # Category filter pills
     cats_available = list(f.get("summary", {}).get("by_category", {}).keys())
     cat_labels = {
@@ -680,6 +692,25 @@ def analytics_layout():
                 ], className="kpi-card"), width=6, lg=3, className="mb-3"),
             ], className="mb-2"),
 
+            # ── Year filter ───────────────────────────────────
+            html.Div([
+                html.Span([html.I(className="bi bi-calendar3 me-1"), "Filter by year:"],
+                          style={"fontSize": ".78rem", "fontWeight": "600",
+                                 "color": MUTED, "whiteSpace": "nowrap"}),
+                dcc.Dropdown(
+                    id="year-filter",
+                    options=year_filter_opts,
+                    value=None,
+                    multi=True,
+                    placeholder="All years",
+                    clearable=True,
+                    style={"fontSize": ".82rem", "minWidth": "260px", "flex": "1"},
+                ),
+            ], className="d-flex align-items-center gap-3 mb-4",
+               style={"background": "white", "borderRadius": "12px",
+                      "padding": "12px 16px",
+                      "boxShadow": "0 1px 3px rgba(0,0,0,.06)"}),
+
             # ── Voting Patterns ───────────────────────────────
             html.Div([
                 html.Div("Voting Patterns by Council Member", className="section-title"),
@@ -724,6 +755,7 @@ def analytics_layout():
                 html.Div(
                     [_contested_card(b) for b in contested_bills]
                     or [html.P("No contested vote data.", style={"color": MUTED})],
+                    id="contested-votes-list",
                 ),
             ], className="section-card"),
 
@@ -782,6 +814,7 @@ def analytics_layout():
             html.Div([
                 html.Div("Monthly Spending Trend", className="section-title"),
                 dcc.Graph(
+                    id="monthly-chart",
                     figure=_monthly_chart(f) if f else go.Figure(),
                     config={"displayModeBar": False},
                     style={"height": "220px"},
@@ -792,6 +825,7 @@ def analytics_layout():
             html.Div([
                 html.Div("Spending by Council District", className="section-title"),
                 dcc.Graph(
+                    id="district-chart",
                     figure=_district_chart(f) if f else go.Figure(),
                     config={"displayModeBar": False},
                 ),
@@ -1346,6 +1380,103 @@ def handle_indexing(index_click, n_intervals,
         return (text, current_store, False, True, True)
 
     return dash.no_update, dash.no_update, True, False, dash.no_update
+
+
+# 15. Year filter → update all spending/contested charts
+@app.callback(
+    Output("spending-chart",       "figure",   allow_duplicate=True),
+    Output("contracts-table",      "data",     allow_duplicate=True),
+    Output("monthly-chart",        "figure",   allow_duplicate=True),
+    Output("district-chart",       "figure",   allow_duplicate=True),
+    Output("contested-votes-list", "children", allow_duplicate=True),
+    Input("year-filter", "value"),
+    prevent_initial_call=True,
+)
+def filter_by_year(selected_years):
+    if not _analytics:
+        return go.Figure(), [], go.Figure(), go.Figure(), []
+
+    f       = _analytics.get("financials") or {}
+    v       = _analytics.get("votes")      or {}
+    yrs     = set(selected_years) if selected_years else None
+
+    # ── Filtered contracts ────────────────────────────────────
+    all_contracts = f.get("contracts", [])
+    filtered      = [c for c in all_contracts if not yrs or c.get("date", "")[:4] in yrs]
+
+    # Rebuild by_category
+    by_cat: dict = defaultdict(lambda: {"total": 0.0, "count": 0})
+    for c in filtered:
+        by_cat[c["category"]]["total"] += c["amount"]
+        by_cat[c["category"]]["count"] += 1
+    fin_filtered = {"summary": {"by_category": {
+        k: {"total": v2["total"], "count": v2["count"],
+            "formatted": f"${v2['total']/1_000_000:.1f}M"}
+        for k, v2 in sorted(by_cat.items(), key=lambda x: -x[1]["total"])
+    }}, "contracts": filtered}
+
+    # Rebuild monthly
+    by_month: dict = defaultdict(float)
+    for c in filtered:
+        by_month[c["date"][:7]] += c["amount"]
+    fin_filtered["summary"]["monthly_spending"] = [
+        {"month": k, "total": round(v2, 2), "formatted": f"${v2/1_000_000:.1f}M"}
+        for k, v2 in sorted(by_month.items())
+    ]
+
+    # Rebuild by_district
+    by_dist: dict = defaultdict(float)
+    for c in filtered:
+        by_dist[c.get("council_district", "citywide")] += c["amount"]
+    fin_filtered["summary"]["by_district"] = {k: round(v2, 2) for k, v2 in by_dist.items()}
+
+    spending_fig   = _spending_bar_chart(fin_filtered)
+    monthly_fig    = _monthly_chart(fin_filtered)
+    district_fig   = _district_chart(fin_filtered)
+
+    contracts_rows = [
+        {
+            "Vendor":   c.get("vendor", "")[:35],
+            "Amount":   c.get("amount_formatted", ""),
+            "Category": c.get("category", "").replace("_", " ").title(),
+            "Date":     c.get("date", ""),
+            "District": c.get("council_district", ""),
+        }
+        for c in filtered[:20]
+    ]
+
+    # ── Filtered contested votes ──────────────────────────────
+    all_bills      = v.get("summary", {}).get("most_contested_bills", [])
+    filtered_bills = [b for b in all_bills if not yrs or b.get("date", "")[:4] in yrs][:10]
+
+    def _contested_card_inline(b):
+        total   = b.get("nay_count", 0) + 10
+        nay_pct = int(b["nay_count"] / max(total, 1) * 100)
+        return html.Div([
+            html.Div([
+                html.Span(b.get("resolution") or "Unknown",
+                          style={"fontWeight": "700", "fontSize": ".85rem", "color": NAVY}),
+                html.Span(dbc.Badge(f"{b['nay_count']} Nay", color="danger",
+                                    style={"fontSize": ".68rem"}), className="ms-2"),
+                html.Span(b.get("date", ""), style={"fontSize": ".73rem", "color": MUTED,
+                                                      "marginLeft": "8px"}),
+            ], className="d-flex align-items-center"),
+            html.Div((b.get("description") or "")[:90],
+                     style={"fontSize": ".78rem", "color": MUTED, "marginTop": "3px",
+                            "whiteSpace": "nowrap", "overflow": "hidden",
+                            "textOverflow": "ellipsis"}),
+            html.Div([
+                html.Div(style={"flex": f"{100 - nay_pct}", "background": SUCCESS, "height": "100%"}),
+                html.Div(style={"flex": str(nay_pct), "background": DANGER, "height": "100%"}),
+            ], className="vote-bar"),
+        ], className="contested-card")
+
+    contested_children = (
+        [_contested_card_inline(b) for b in filtered_bills]
+        or [html.P("No contested votes for selected years.", style={"color": MUTED})]
+    )
+
+    return spending_fig, contracts_rows, monthly_fig, district_fig, contested_children
 
 
 # ── RUN ───────────────────────────────────────────────────────

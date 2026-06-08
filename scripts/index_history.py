@@ -16,6 +16,7 @@ import sys
 import os
 import time
 import json
+from datetime import date as _date
 
 # Project root is one level above scripts/
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -26,7 +27,7 @@ from pipeline import run_pipeline, MANIFEST_PATH
 
 # ── CONFIGURATION ──────────────────────────────────────────────
 # Oldest-first keeps the manifest growing chronologically.
-YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024]
+YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024, 2026]
 
 # Start with CityCouncil only — largest and most analytically valuable.
 # Add committees by updating this list after CityCouncil finishes.
@@ -49,13 +50,20 @@ def is_already_indexed(year: int, meeting_types: list, manifest: dict) -> bool:
     """
     True if every meeting type for this year already appears in the manifest.
     Manifest stores dates as 'YYYY-MM' (e.g. '2024-01', '2024-12').
+    For the current year we only check date_from so a month advance
+    (e.g. 2026-05 → 2026-06) triggers a fresh index run.
     """
+    today = _date.today()
     for mt in meeting_types:
         found = False
         for seg in manifest.get("segments", []):
-            if (mt in seg.get("meeting_types", []) and
-                    seg.get("date_from") == f"{year}-01" and
-                    seg.get("date_to")   == f"{year}-12"):
+            date_from_match = seg.get("date_from") == f"{year}-01"
+            date_to_match   = (
+                seg.get("date_to") == _date_to_for_year(year)
+                if year == today.year
+                else seg.get("date_to") == f"{year}-12"
+            )
+            if mt in seg.get("meeting_types", []) and date_from_match and date_to_match:
                 found = True
                 break
         if not found:
@@ -65,13 +73,21 @@ def is_already_indexed(year: int, meeting_types: list, manifest: dict) -> bool:
 
 # ── INDEXING ───────────────────────────────────────────────────
 
+def _date_to_for_year(year: int) -> str:
+    """December for past years; current month for the current year."""
+    today = _date.today()
+    if year == today.year:
+        return f"{year}-{today.month:02d}"
+    return f"{year}-12"
+
+
 def index_year(year: int, meeting_types: list):
     """
-    Index one full calendar year.
+    Index one calendar year (or year-to-date for the current year).
     Returns (success: bool, chunks_added: int).
     """
     date_from = f"{year}-01"
-    date_to   = f"{year}-12"
+    date_to   = _date_to_for_year(year)
 
     print(f"\n{'═' * 52}")
     print(f"  Indexing {year}  |  {', '.join(meeting_types)}")
