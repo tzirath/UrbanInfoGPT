@@ -22,7 +22,7 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from pipeline import run_pipeline, MANIFEST_PATH
 
 # ── CONFIGURATION ──────────────────────────────────────────────
-YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024, 2025, 2026]
+YEARS_TO_INDEX = [2022, 2023, 2024, 2025, 2026]
 MEETING_TYPES  = ["CityCouncil"]
 PAUSE_SECONDS  = 2   # pause between quarters
 
