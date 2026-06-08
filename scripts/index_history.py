@@ -27,7 +27,7 @@ from pipeline import run_pipeline, MANIFEST_PATH
 
 # ── CONFIGURATION ──────────────────────────────────────────────
 # Oldest-first keeps the manifest growing chronologically.
-YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024, 2026]
+YEARS_TO_INDEX = [2020, 2021, 2022, 2023, 2024, 2025, 2026]
 
 # Start with CityCouncil only — largest and most analytically valuable.
 # Add committees by updating this list after CityCouncil finishes.
