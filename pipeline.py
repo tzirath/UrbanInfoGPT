@@ -203,14 +203,20 @@ def _run(meeting_types, date_from, date_to):
         chunk_pairs = chunk_documents(all_rows)
         chunks    = [c for c, _ in chunk_pairs]
         metadatas = [m for _, m in chunk_pairs]
-        # Deterministic IDs: include text content so rows sharing meeting+date+page
-        # (e.g. missing page field defaults to 0) don't collide within a batch.
-        ids = [
-            hashlib.md5(
-                f"{m['meeting']}_{m['date']}_{m['page']}_{m['chunk_index']}_{text[:80]}".encode()
+        # Deterministic IDs: hash full text so identical boilerplate across rows
+        # never collides. Deduplicate in case two chunks are truly identical.
+        seen: dict = {}
+        deduped_chunks, deduped_meta, ids = [], [], []
+        for text, m in zip(chunks, metadatas):
+            uid = hashlib.md5(
+                f"{m['meeting']}_{m['date']}_{text}".encode()
             ).hexdigest()[:16]
-            for text, m in zip(chunks, metadatas)
-        ]
+            if uid not in seen:
+                seen[uid] = True
+                deduped_chunks.append(text)
+                deduped_meta.append(m)
+                ids.append(uid)
+        chunks, metadatas = deduped_chunks, deduped_meta
         _log(f"  {len(chunks)} chunks created")
 
         # ── Embed & upsert ─────────────────────────────────
