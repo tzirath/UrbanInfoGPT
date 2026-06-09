@@ -247,8 +247,9 @@ def _vote_chart(votes_data, year=None):
                              marker_color="#9CA3AF", hovertemplate="%{y}: %{x} Absent<extra></extra>"))
         title_text = "Voting Patterns — All Years (2020–2026)"
 
+    _base = {k: v for k, v in _CHART_BASE.items() if k != "margin"}
     fig.update_layout(
-        **_CHART_BASE,
+        **_base,
         showlegend=True,
         barmode="stack",
         height=340,
@@ -1542,6 +1543,7 @@ def remove_topic(remove_clicks, saved):
     Output("last-visit",    "data"),
     Input("saved-topics",   "data"),
     Input("url",            "pathname"),
+    prevent_initial_call=True,
 )
 def render_topics(saved, pathname):
     from datetime import datetime
