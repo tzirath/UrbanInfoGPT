@@ -1153,7 +1153,10 @@ def tracker_layout(topics=None, last_visit=None):
         for c in relevant:
             res_num = c.get("resolution_number")
             date_s  = c.get("date", "")[:10]
-            text_s  = c.get("text", "")[:130]
+            _raw    = c.get("text", "")
+            # Cut at the first sentence end within 400 chars, else word boundary
+            _end    = next((i for i, ch in enumerate(_raw[:400]) if ch == "." and i > 40), None)
+            text_s  = _raw[:_end + 1] if _end else _raw[:350].rsplit(" ", 1)[0]
             doc_url = build_datasette_url(
                 str(c.get("meeting") or ""),
                 str(c.get("date")    or ""),
@@ -1173,7 +1176,7 @@ def tracker_layout(topics=None, last_visit=None):
                 ], style={"display": "flex", "alignItems": "center",
                           "marginBottom": "3px"}),
                 html.Div([
-                    html.Span(text_s + "…",
+                    html.Span(text_s + ("…" if len(_raw) > len(text_s) else ""),
                               style={"fontSize": ".78rem", "color": "#4B5563",
                                      "lineHeight": "1.45", "flex": "1"}),
                     html.A([html.I(className="bi bi-box-arrow-up-right me-1"),
