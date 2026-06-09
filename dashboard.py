@@ -964,82 +964,344 @@ def analytics_layout():
 
 # ── TRACKER LAYOUT ────────────────────────────────────────────
 
+# ── TRACKER HELPERS ───────────────────────────────────────────
+
+def _tracker_activity_chart(chunks):
+    from collections import Counter
+    months = Counter(c.get("date", "")[:7] for c in chunks if c.get("date", "")[:7])
+    if not months:
+        return go.Figure()
+    pairs = sorted(months.items())[-18:]
+    _base = {k: v for k, v in _CHART_BASE.items() if k != "margin"}
+    fig = go.Figure(go.Bar(
+        x=[p[0] for p in pairs], y=[p[1] for p in pairs],
+        marker_color=AMBER,
+        hovertemplate="%{x}: %{y} references<extra></extra>",
+    ))
+    fig.update_layout(**_base, height=170, showlegend=False,
+                      margin=dict(l=0, r=8, t=30, b=0),
+                      title=dict(text="Council Activity by Month",
+                                 font=dict(size=10, color=MUTED)),
+                      xaxis=dict(showgrid=False, tickfont=dict(size=7), tickangle=-45),
+                      yaxis=dict(showgrid=True, gridcolor="#F3F4F6",
+                                 zeroline=False, tickfont=dict(size=8)))
+    return fig
+
+
+def _tracker_donut(topic, votes_data):
+    keywords = [w for w in topic.lower().split() if len(w) > 3]
+    members  = votes_data.get("members", {})
+    outcomes = {"Passed": 0, "Failed": 0, "Postponed": 0, "Amended": 0}
+    seen     = set()
+    for stats in members.values():
+        for bill in stats.get("nay_bills", []):
+            res  = bill.get("resolution", "")
+            desc = (bill.get("description") or "").lower()
+            if res in seen:
+                continue
+            if any(kw in desc for kw in keywords):
+                result = bill.get("bill_result", "")
+                if result in outcomes:
+                    outcomes[result] += 1
+                    seen.add(res)
+    total = sum(outcomes.values())
+    if total == 0:
+        return None
+    labels = [k for k, v in outcomes.items() if v > 0]
+    values = [outcomes[k] for k in labels]
+    colors = {"Passed": SUCCESS, "Failed": DANGER,
+               "Postponed": AMBER, "Amended": "#8B5CF6"}
+    _base  = {k: v for k, v in _CHART_BASE.items() if k != "margin"}
+    fig    = go.Figure(go.Pie(
+        labels=labels, values=values, hole=0.55,
+        marker_colors=[colors.get(l, "#9CA3AF") for l in labels],
+        hovertemplate="%{label}: %{value}<extra></extra>",
+        textfont=dict(size=9),
+    ))
+    fig.update_layout(**_base, height=170, showlegend=True,
+                      margin=dict(l=0, r=0, t=30, b=0),
+                      title=dict(text="Contested Bill Outcomes",
+                                 font=dict(size=10, color=MUTED)),
+                      legend=dict(font=dict(size=8), orientation="v",
+                                  x=1.02, y=0.5))
+    return fig
+
+
+def _council_positions(topic, chunks, votes_data):
+    keywords = [w for w in topic.lower().split() if len(w) > 3]
+    members  = votes_data.get("members", {})
+    res_nums = {c.get("resolution_number") for c in chunks if c.get("resolution_number")}
+    nays: dict = {}
+    for name, stats in members.items():
+        count = 0
+        for bill in stats.get("nay_bills", []):
+            if bill.get("resolution") in res_nums:
+                count += 1
+            elif keywords and any(kw in (bill.get("description") or "").lower()
+                                  for kw in keywords):
+                count += 1
+        if count > 0:
+            nays[name] = count
+    return nays
+
+
+def _trending(chunks):
+    from datetime import datetime, timedelta
+    now     = datetime.utcnow()
+    c3      = (now - timedelta(days=90)).strftime("%Y-%m-%d")
+    c6      = (now - timedelta(days=180)).strftime("%Y-%m-%d")
+    recent  = sum(1 for c in chunks if c.get("date", "") >= c3)
+    prev    = sum(1 for c in chunks if c6 <= c.get("date", "") < c3)
+    if recent == 0:
+        return "💤 Low recent activity", "#9CA3AF"
+    if recent >= prev * 1.5 or (recent > 0 and prev == 0):
+        return "🔥 Trending up", DANGER
+    return "📈 Active", SUCCESS
+
+
 def tracker_layout(topics=None, last_visit=None):
-    topics = topics or []
+    topics     = topics or []
+    v_data     = (_analytics or {}).get("votes")      or {}
+    suggestions = [t for t in STARTER_TOPICS if t not in topics]
 
-    # Build topic cards inline (no separate callback needed)
-    if not topics:
-        content = html.Div([
-            html.P("Suggested topics to track:",
-                   style={"fontSize": ".78rem", "color": MUTED,
-                          "fontWeight": "600", "marginBottom": "10px"}),
+    # ── Add input + always-visible suggestions ────────────────
+    add_section = html.Div([
+        html.Div([
+            dbc.Input(id="topic-input",
+                      placeholder="Add a topic to track (e.g. Affordable Housing)…",
+                      type="text",
+                      style={"fontSize": ".9rem", "borderRadius": "10px 0 0 10px",
+                             "border": f"1px solid {BORDER}", "flex": "1"}),
+            dbc.Button("+ Add", id="add-topic-btn", n_clicks=0,
+                       style={"background": f"linear-gradient(135deg,{AMBER} 0%,{AMBER_DARK} 100%)",
+                              "border": "none", "color": "white", "fontWeight": "600",
+                              "borderRadius": "0 10px 10px 0", "padding": "8px 20px"}),
+        ], className="d-flex mb-3"),
+        html.Div([
+            html.Span("Suggested: " if topics else "Start tracking: ",
+                      style={"fontSize": ".75rem", "color": MUTED,
+                             "fontWeight": "600", "marginRight": "6px",
+                             "whiteSpace": "nowrap"}),
+            *[html.Button(t, id={"type": "starter-topic", "index": i},
+                          n_clicks=0, className="starter-pill me-2 mb-1")
+              for i, t in enumerate(STARTER_TOPICS)
+              if t not in topics],
+        ], className="d-flex flex-wrap align-items-center mb-4") if suggestions else "",
+    ])
+
+    # ── Topic cards ───────────────────────────────────────────
+    topic_cards = []
+    for idx, topic in enumerate(topics):
+        try:
+            chunks = refined_search(topic, n_results=12)
+        except Exception:
+            chunks = []
+
+        # Trending badge
+        trend_label, trend_color = _trending(chunks)
+
+        # Charts
+        act_fig  = _tracker_activity_chart(chunks)
+        dnut_fig = _tracker_donut(topic, v_data)
+
+        # Council positions
+        nays = _council_positions(topic, chunks, v_data)
+        if nays:
+            top_nays = sorted(nays.items(), key=lambda x: x[1], reverse=True)[:5]
+            council_section = html.Div([
+                html.Div([
+                    html.I(className="bi bi-people me-2",
+                           style={"color": NAVY, "fontSize": ".82rem"}),
+                    html.Span("Council Positions",
+                              style={"fontWeight": "700", "fontSize": ".82rem",
+                                     "color": NAVY, "textTransform": "uppercase",
+                                     "letterSpacing": ".05em"}),
+                ], className="d-flex align-items-center mb-2"),
+                html.Div([
+                    html.Span("⚠️ Recorded opposition: ",
+                              style={"fontSize": ".78rem", "color": MUTED}),
+                    *[html.Span(f"{name} ({cnt}×)",
+                                style={"fontSize": ".78rem", "fontWeight": "600",
+                                       "color": DANGER, "marginRight": "8px"})
+                      for name, cnt in top_nays],
+                ]),
+                html.Div("✓ Remaining council members generally supportive",
+                         style={"fontSize": ".74rem", "color": SUCCESS,
+                                "marginTop": "4px"}),
+            ], style={"background": "#F9FAFB", "borderRadius": "8px",
+                      "padding": "10px 14px", "marginBottom": "14px",
+                      "border": f"1px solid {BORDER}"})
+        else:
+            council_section = html.Div([
+                html.I(className="bi bi-people me-2",
+                       style={"color": SUCCESS}),
+                html.Span("All council members generally supportive of this topic",
+                          style={"fontSize": ".78rem", "color": SUCCESS,
+                                 "fontWeight": "500"}),
+            ], style={"background": "#F0FDF4", "borderRadius": "8px",
+                      "padding": "10px 14px", "marginBottom": "14px",
+                      "border": "1px solid #BBF7D0"})
+
+        # Recent activity timeline (up to 6 items, with source links)
+        relevant = sorted(
+            [c for c in chunks if c.get("score", 0) > 0.15],
+            key=lambda c: c.get("date", ""),
+            reverse=True,
+        )[:6]
+
+        timeline_rows = []
+        for c in relevant:
+            res_num = c.get("resolution_number")
+            date_s  = c.get("date", "")[:10]
+            text_s  = c.get("text", "")[:130]
+            doc_url = build_datasette_url(
+                str(c.get("meeting") or ""),
+                str(c.get("date")    or ""),
+                c.get("page") or "",
+            )
+            timeline_rows.append(html.Div([
+                html.Div([
+                    html.Span(date_s, style={"fontSize": ".72rem", "fontWeight": "700",
+                                              "color": NAVY, "whiteSpace": "nowrap",
+                                              "minWidth": "80px"}),
+                    *([html.Span(f"Res {res_num}",
+                                 style={"fontSize": ".68rem", "fontWeight": "600",
+                                        "color": "white", "background": "#6B7280",
+                                        "borderRadius": "4px", "padding": "1px 6px",
+                                        "marginLeft": "6px", "whiteSpace": "nowrap"})]
+                      if res_num else []),
+                ], style={"display": "flex", "alignItems": "center",
+                          "marginBottom": "3px"}),
+                html.Div([
+                    html.Span(text_s + "…",
+                              style={"fontSize": ".78rem", "color": "#4B5563",
+                                     "lineHeight": "1.45", "flex": "1"}),
+                    html.A([html.I(className="bi bi-box-arrow-up-right me-1"),
+                            "View"],
+                           href=doc_url, target="_blank",
+                           style={"fontSize": ".72rem", "color": AMBER_DARK,
+                                  "fontWeight": "500", "whiteSpace": "nowrap",
+                                  "marginLeft": "10px", "textDecoration": "none"}),
+                ], style={"display": "flex", "alignItems": "flex-start"}),
+            ], style={"paddingBottom": "10px", "marginBottom": "10px",
+                      "borderBottom": f"1px solid {BORDER}"}))
+
+        if not timeline_rows:
+            timeline_rows = [html.P("No recent activity found.",
+                                    style={"fontSize": ".78rem", "color": MUTED})]
+
+        # First/last seen dates
+        dates  = sorted(c.get("date", "") for c in chunks if c.get("date"))
+        span_s = (f"First mention: {dates[0][:7]}  ·  Most recent: {dates[-1][:7]}"
+                  if len(dates) > 1 else "")
+
+        topic_cards.append(html.Div([
+
+            # Card header
             html.Div([
-                html.Button(topic, id={"type": "starter-topic", "index": i},
-                            n_clicks=0, className="starter-pill me-2 mb-2")
-                for i, topic in enumerate(STARTER_TOPICS)
-            ], className="d-flex flex-wrap"),
-        ], className="mb-4")
+                html.Div([
+                    html.Span("🔔 ", style={"fontSize": "1rem"}),
+                    html.Span(topic, style={"fontWeight": "700", "fontSize": "1.05rem",
+                                            "color": TEXT}),
+                    dbc.Badge(trend_label, style={"background": trend_color,
+                                                   "fontSize": ".65rem",
+                                                   "fontWeight": "500",
+                                                   "marginLeft": "10px"}),
+                ], className="d-flex align-items-center"),
+                html.Button(
+                    [html.I(className="bi bi-x me-1"), "Remove"],
+                    id={"type": "remove-topic", "index": idx}, n_clicks=0,
+                    style={"background": "none", "border": f"1px solid {BORDER}",
+                           "borderRadius": "6px", "cursor": "pointer",
+                           "color": MUTED, "fontSize": ".72rem", "padding": "3px 8px"},
+                ),
+            ], className="d-flex justify-content-between align-items-center mb-1"),
+
+            html.Div(span_s, style={"fontSize": ".72rem", "color": MUTED,
+                                     "marginBottom": "14px"}) if span_s else "",
+
+            # Charts row
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(figure=act_fig,
+                              config={"displayModeBar": False},
+                              style={"height": "170px"}),
+                ], width=12, lg=7),
+                dbc.Col([
+                    dcc.Graph(figure=dnut_fig,
+                              config={"displayModeBar": False},
+                              style={"height": "170px"}) if dnut_fig else
+                    html.Div("No contested vote data yet for this topic.",
+                             style={"fontSize": ".75rem", "color": MUTED,
+                                    "paddingTop": "60px", "textAlign": "center"}),
+                ], width=12, lg=5),
+            ], className="g-2 mb-3"),
+
+            # Council positions
+            council_section,
+
+            # Timeline
+            html.Div([
+                html.Div([
+                    html.I(className="bi bi-clock-history me-2",
+                           style={"color": NAVY, "fontSize": ".82rem"}),
+                    html.Span("Recent Activity",
+                              style={"fontWeight": "700", "fontSize": ".82rem",
+                                     "color": NAVY, "textTransform": "uppercase",
+                                     "letterSpacing": ".05em"}),
+                ], className="d-flex align-items-center mb-3"),
+                *timeline_rows,
+            ]),
+
+        ], className="tracker-card mb-4"))
+
+    # ── Empty state ───────────────────────────────────────────
+    if not topics:
+        empty = html.Div([
+            html.I(className="bi bi-bell-slash",
+                   style={"fontSize": "2.5rem", "color": "#D1D5DB",
+                          "display": "block", "textAlign": "center",
+                          "marginBottom": "12px"}),
+            html.P("No topics tracked yet.",
+                   style={"textAlign": "center", "color": MUTED,
+                          "fontWeight": "600", "marginBottom": "4px"}),
+            html.P("Click a suggested topic above or type your own.",
+                   style={"textAlign": "center", "color": MUTED,
+                          "fontSize": ".82rem"}),
+        ], style={"padding": "48px 0"})
+        body = empty
     else:
-        topic_cards = []
-        for idx, topic in enumerate(topics):
-            try:
-                topic_chunks = refined_search(topic, n_results=8)
-            except Exception:
-                topic_chunks = []
-
-            relevant = [c for c in (topic_chunks or [])
-                        if c.get("content_type") in ("resolution", "vote")
-                        or c.get("score", 0) > 0.2][:3]
-
-            mini_timeline = [
-                html.Div([
-                    html.Span(c.get("date", "")[:10],
-                              style={"fontSize": ".72rem", "fontWeight": "600",
-                                     "color": NAVY, "marginRight": "8px", "whiteSpace": "nowrap"}),
-                    html.Span(c.get("text", "")[:120] + "…",
-                              style={"fontSize": ".78rem", "color": "#4B5563", "lineHeight": "1.4"}),
-                ], style={"display": "flex", "gap": "8px", "marginBottom": "8px",
-                          "paddingBottom": "8px", "borderBottom": f"1px solid {BORDER}"})
-                for c in relevant
-            ] or [html.P("No recent council activity found for this topic.",
-                         style={"fontSize": ".78rem", "color": MUTED, "marginBottom": 0})]
-
-            topic_cards.append(html.Div([
-                html.Div([
-                    html.Span(topic, style={"fontWeight": "700", "fontSize": "1rem", "color": TEXT}),
-                    html.Button(html.I(className="bi bi-x"),
-                                id={"type": "remove-topic", "index": idx}, n_clicks=0,
-                                style={"background": "none", "border": "none", "cursor": "pointer",
-                                       "color": MUTED, "fontSize": ".9rem", "padding": "0 4px"}),
-                ], className="d-flex justify-content-between align-items-center mb-3"),
-                html.Div(mini_timeline),
-            ], className="tracker-card mb-3"))
-        content = html.Div(topic_cards)
+        body = html.Div(topic_cards)
 
     return html.Div([
+
+        # Page header
         html.Div([
             html.H2("Topic Tracker",
                     style={"fontWeight": "700", "fontSize": "1.5rem",
                            "color": TEXT, "marginBottom": "4px"}),
-            html.P("Follow council topics and get the latest updates from meeting minutes.",
-                   style={"color": MUTED, "fontSize": ".88rem", "marginBottom": 0}),
+            html.P([
+                "Monitor council activity on the issues you care about. ",
+                html.Span("Data: 2020–2026 · Denver City Council.",
+                          style={"color": MUTED}),
+            ], style={"fontSize": ".88rem", "color": TEXT, "marginBottom": 0}),
         ], className="mb-4"),
 
-        html.Div([
-            html.Div([
-                dbc.Input(id="topic-input",
-                          placeholder="Add a topic to track (e.g. Affordable Housing)…",
-                          type="text",
-                          style={"fontSize": ".9rem", "borderRadius": "10px 0 0 10px",
-                                 "border": f"1px solid {BORDER}", "flex": "1"}),
-                dbc.Button("+ Add", id="add-topic-btn", n_clicks=0,
-                           style={"background": f"linear-gradient(135deg, {AMBER} 0%, {AMBER_DARK} 100%)",
-                                  "border": "none", "color": "white", "fontWeight": "600",
-                                  "borderRadius": "0 10px 10px 0", "padding": "8px 20px"}),
-            ], className="d-flex mb-3"),
-        ]),
+        add_section,
+        body,
 
-        content,
+        # Footer tip
+        html.Div([
+            html.Hr(style={"borderColor": BORDER}),
+            html.P([
+                html.I(className="bi bi-lightbulb me-2", style={"color": AMBER}),
+                "Tip for city officials: ",
+                html.Span("Use the Chat page to ask detailed questions about any topic, "
+                          "pull contract data, or get vote breakdowns by year.",
+                          style={"color": MUTED}),
+            ], style={"fontSize": ".78rem", "color": TEXT}),
+        ], className="mt-4"),
+
     ], className="tracker-page")
 
 

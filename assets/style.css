@@ -523,6 +523,17 @@ details > summary::-webkit-details-marker { display: none; }
 }
 .starter-pill:hover { background: #FDE68A; }
 
+/* ── TRACKER CARD ENHANCED ──────────────────────────────────── */
+.tracker-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 20px 22px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow .15s;
+}
+.tracker-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.09); }
+
 /* ── CONTESTED CARD (improved) ──────────────────────────────── */
 .contested-card-new {
   background: white;
