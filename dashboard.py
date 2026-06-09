@@ -983,9 +983,7 @@ def tracker_layout(topics=None, last_visit=None):
         topic_cards = []
         for idx, topic in enumerate(topics):
             try:
-                topic_chunks = refined_search(topic, n_results=8,
-                                              date_from="2020-01-01",
-                                              date_to="2026-12-31")
+                topic_chunks = refined_search(topic, n_results=8)
             except Exception:
                 topic_chunks = []
 
