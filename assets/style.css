@@ -476,3 +476,60 @@ details > summary::-webkit-details-marker { display: none; }
 
 /* ── LOADING ────────────────────────────────────────────────── */
 ._dash-loading { color: var(--amber) !important; }
+
+/* ── HISTORY PILLS ──────────────────────────────────────────── */
+.history-pill {
+  background: white;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.history-pill:hover { border-color: var(--amber); color: var(--amber-dark); background: var(--amber-light); }
+
+/* ── TRACKER PAGE ───────────────────────────────────────────── */
+.tracker-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFFBF5 0%, #FFF3E0 50%, #FFFBF5 100%);
+  padding: 32px;
+}
+
+.tracker-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  box-shadow: var(--card-shadow);
+}
+
+.starter-pill {
+  background: var(--amber-light);
+  border: 1.5px solid #FDE68A;
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--amber-dark);
+  cursor: pointer;
+  transition: all .15s;
+}
+.starter-pill:hover { background: #FDE68A; }
+
+/* ── CONTESTED CARD (improved) ──────────────────────────────── */
+.contested-card-new {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  transition: box-shadow .15s;
+}
+.contested-card-new:hover { box-shadow: 0 3px 12px rgba(0,0,0,.08); }

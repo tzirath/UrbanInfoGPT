@@ -5,6 +5,7 @@ import sys
 import os
 import json
 from collections import defaultdict
+from datetime import date as _date_cls
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -123,6 +124,17 @@ EXAMPLE_QUESTIONS = [
     "Homeless shelter funding",
 ]
 
+# ── STARTER TOPICS ────────────────────────────────────────────
+STARTER_TOPICS = [
+    "Affordable Housing",
+    "Homelessness",
+    "Climate & Environment",
+    "Transportation",
+    "Immigration",
+    "Public Safety",
+    "Education",
+]
+
 # ── MONTH OPTIONS ─────────────────────────────────────────────
 def _month_options():
     from datetime import date
@@ -189,26 +201,103 @@ _CHART_BASE = dict(
 )
 
 
-def _vote_chart(votes_data):
+def _vote_chart(votes_data, year=None):
+    """Build voting patterns chart. year=None or 'all' shows all three bars lifetime.
+    year='2024' (specific) shows nay and absent for that year only."""
     members = votes_data.get("members", {})
-    ranked  = sorted(members.items(), key=lambda x: x[1]["nay_count"], reverse=True)[:12]
-    if not ranked:
+    if not members:
         return go.Figure()
-    names   = [r[0] for r in ranked][::-1]
-    ayes    = [members[n]["aye_count"]    for n in names]
-    nays    = [members[n]["nay_count"]    for n in names]
-    absents = [members[n]["absent_count"] for n in names]
-    fig = go.Figure()
-    fig.add_trace(go.Bar(name="Aye",    x=ayes,    y=names, orientation="h",
-                         marker_color=SUCCESS,   hovertemplate="%{y}: %{x} Aye<extra></extra>"))
-    fig.add_trace(go.Bar(name="Nay",    x=nays,    y=names, orientation="h",
-                         marker_color=DANGER,    hovertemplate="%{y}: %{x} Nay<extra></extra>"))
-    fig.add_trace(go.Bar(name="Absent", x=absents, y=names, orientation="h",
-                         marker_color="#9CA3AF", hovertemplate="%{y}: %{x} Absent<extra></extra>"))
-    fig.update_layout(**_CHART_BASE, showlegend=True, barmode="stack", height=340,
-                      xaxis=dict(showgrid=True, gridcolor="#F3F4F6", zeroline=False),
-                      yaxis=dict(showgrid=False))
+
+    if year and year != "all":
+        # Per-year: rank by nay count in that year
+        def _nay_for_year(stats):
+            return sum(1 for b in stats.get("nay_bills", []) if (b.get("date") or "")[:4] == year)
+        def _absent_for_year(stats):
+            return sum(1 for d in stats.get("absent_dates", []) if (d or "")[:4] == year)
+
+        ranked = sorted(
+            [(name, stats) for name, stats in members.items()],
+            key=lambda x: _nay_for_year(x[1]),
+            reverse=True,
+        )[:12]
+        names   = [r[0] for r in ranked][::-1]
+        nays    = [_nay_for_year(members[n]) for n in names]
+        absents = [_absent_for_year(members[n]) for n in names]
+
+        fig = go.Figure()
+        fig.add_trace(go.Bar(name="Nay",    x=nays,    y=names, orientation="h",
+                             marker_color=DANGER,    hovertemplate="%{y}: %{x} Nay<extra></extra>"))
+        fig.add_trace(go.Bar(name="Absent", x=absents, y=names, orientation="h",
+                             marker_color="#9CA3AF", hovertemplate="%{y}: %{x} Absent<extra></extra>"))
+        title_text = f"Voting Patterns — {year}"
+    else:
+        # All years — full lifetime stats
+        ranked  = sorted(members.items(), key=lambda x: x[1]["nay_count"], reverse=True)[:12]
+        names   = [r[0] for r in ranked][::-1]
+        ayes    = [members[n]["aye_count"]    for n in names]
+        nays    = [members[n]["nay_count"]    for n in names]
+        absents = [members[n]["absent_count"] for n in names]
+
+        fig = go.Figure()
+        fig.add_trace(go.Bar(name="Aye",    x=ayes,    y=names, orientation="h",
+                             marker_color=SUCCESS,   hovertemplate="%{y}: %{x} Aye<extra></extra>"))
+        fig.add_trace(go.Bar(name="Nay",    x=nays,    y=names, orientation="h",
+                             marker_color=DANGER,    hovertemplate="%{y}: %{x} Nay<extra></extra>"))
+        fig.add_trace(go.Bar(name="Absent", x=absents, y=names, orientation="h",
+                             marker_color="#9CA3AF", hovertemplate="%{y}: %{x} Absent<extra></extra>"))
+        title_text = "Voting Patterns — All Years (2020–2026)"
+
+    fig.update_layout(
+        **_CHART_BASE,
+        showlegend=True,
+        barmode="stack",
+        height=340,
+        xaxis=dict(showgrid=True, gridcolor="#F3F4F6", zeroline=False),
+        yaxis=dict(showgrid=False),
+        title=dict(text=title_text, font=dict(size=12, color=TEXT)),
+        margin=dict(l=0, r=16, t=40, b=0),
+    )
     return fig
+
+
+def _vote_table_data(votes_data, year=None):
+    """Build vote table rows. When year is specific, show nay/absent for that year; aye shows '—'."""
+    members = votes_data.get("members", {})
+    if not members:
+        return []
+
+    if year and year != "all":
+        def _nay_for_year(stats):
+            return sum(1 for b in stats.get("nay_bills", []) if (b.get("date") or "")[:4] == year)
+        def _absent_for_year(stats):
+            return sum(1 for d in stats.get("absent_dates", []) if (d or "")[:4] == year)
+
+        rows = []
+        for name, s in sorted(members.items(), key=lambda x: _nay_for_year(x[1]), reverse=True):
+            nay_y    = _nay_for_year(s)
+            absent_y = _absent_for_year(s)
+            rows.append({
+                "Member":  name,
+                "Total":   "—",
+                "Aye":     "—",
+                "Nay":     nay_y,
+                "Absent":  absent_y,
+                "Dissent": "—",
+            })
+        return rows
+    else:
+        return [
+            {
+                "Member": name,
+                "Total":  s["total_votes"],
+                "Aye":    s["aye_count"],
+                "Nay":    s["nay_count"],
+                "Absent": s["absent_count"],
+                "Dissent": f"{s['nay_rate']:.1%}",
+            }
+            for name, s in sorted(members.items(), key=lambda x: x[1]["nay_count"], reverse=True)
+            if s["total_votes"] > 0
+        ]
 
 
 def _spending_bar_chart(fin_data, selected_cats=None):
@@ -384,6 +473,64 @@ def _search_strategy_panel(original, queries):
     ])
 
 
+# ── CONTESTED CARD (improved) ─────────────────────────────────
+
+def _contested_card(b, rank=None):
+    """Improved contested vote card with rank, meeting minutes link, and voter names."""
+    nay_count  = b.get("nay_count", 0)
+    resolution = b.get("resolution") or "Unknown"
+    date_str   = b.get("date", "")
+    description = (b.get("description") or "")[:200]
+    nay_voters  = b.get("nay_voters", [])
+
+    # Format date nicely if possible
+    try:
+        d = _date_cls.fromisoformat(date_str)
+        nice_date = d.strftime("%B %-d, %Y")
+    except Exception:
+        nice_date = date_str
+
+    rank_label = f"#{rank} Most Contested — {nay_count} Nay Vote{'s' if nay_count != 1 else ''}" if rank else f"{nay_count} Nay Vote{'s' if nay_count != 1 else ''}"
+
+    minutes_url = f"https://denver.co.civic.band/meetings/minutes?meeting=CityCouncil&date={date_str}"
+
+    return html.Div([
+        html.Div([
+            html.Span(rank_label,
+                      style={"fontWeight": "700", "fontSize": ".78rem",
+                             "color": DANGER, "textTransform": "uppercase",
+                             "letterSpacing": ".04em"}),
+        ], style={"marginBottom": "6px"}),
+
+        html.Div([
+            html.Span(resolution,
+                      style={"fontWeight": "700", "fontSize": ".92rem", "color": NAVY,
+                             "marginRight": "10px"}),
+            html.Span(nice_date,
+                      style={"fontSize": ".75rem", "color": MUTED}),
+        ], className="d-flex align-items-center flex-wrap mb-1"),
+
+        html.Div(description,
+                 style={"fontSize": ".8rem", "color": "#4B5563",
+                        "lineHeight": "1.5", "marginBottom": "8px"}) if description else "",
+
+        html.Div([
+            html.Span("Voted Against By: ",
+                      style={"fontWeight": "600", "fontSize": ".75rem",
+                             "color": MUTED, "whiteSpace": "nowrap"}),
+            html.Span(" · ".join(nay_voters) if nay_voters else "—",
+                      style={"fontSize": ".75rem", "color": TEXT}),
+        ], className="d-flex flex-wrap align-items-baseline mb-2") if nay_voters else "",
+
+        html.A([
+            "View Meeting Minutes ",
+            html.I(className="bi bi-arrow-right"),
+        ], href=minutes_url, target="_blank",
+           style={"fontSize": ".75rem", "color": AMBER_DARK, "fontWeight": "600",
+                  "textDecoration": "none"}),
+    ], className="contested-card-new")
+
+
 # ── CHAT LAYOUT ───────────────────────────────────────────────
 
 def chat_layout():
@@ -415,17 +562,14 @@ def chat_layout():
                            "background": "transparent"},
                 ),
                 html.Div(style={"height": "1px", "background": BORDER, "margin": "12px 0"}),
+                # CHANGE 7: Remove plus-circle icon — just the submit button on the right
                 html.Div([
-                    html.Span(html.I(className="bi bi-plus-circle"),
-                              style={"fontSize": "1.1rem", "color": MUTED, "cursor": "pointer"}),
-                    html.Div([
-                        dbc.Button(
-                            [html.I(className="bi bi-send-fill me-2"), "Ask"],
-                            id="ask-button",
-                            className="submit-btn",
-                        ),
-                    ]),
-                ], className="d-flex justify-content-between align-items-center"),
+                    dbc.Button(
+                        [html.I(className="bi bi-send-fill me-2"), "Ask"],
+                        id="ask-button",
+                        className="submit-btn",
+                    ),
+                ], className="d-flex justify-content-end align-items-center"),
             ], className="search-card mb-3"),
 
             # Example pills
@@ -440,6 +584,9 @@ def chat_layout():
                     className="example-pill me-2 mb-1",
                 ) for i, q in enumerate(EXAMPLE_QUESTIONS)],
             ], className="d-flex flex-wrap align-items-center mb-3"),
+
+            # CHANGE 5: History pills section
+            html.Div(id="history-pills-section"),
 
             # Filters
             html.Div([
@@ -558,51 +705,13 @@ def analytics_layout():
     top_rate  = f"{top_d[1].get('nay_rate', 0):.1%}" if members else "—"
     top_nays  = top_d[1].get("nay_count", 0)           if members else 0
 
-    # Vote member table data
-    vote_table_data = [
-        {
-            "Member": name,
-            "Total": s["total_votes"],
-            "Aye":   s["aye_count"],
-            "Nay":   s["nay_count"],
-            "Absent": s["absent_count"],
-            "Dissent": f"{s['nay_rate']:.1%}",
-        }
-        for name, s in sorted(members.items(), key=lambda x: x[1]["nay_count"], reverse=True)
-        if s["total_votes"] > 0
-    ]
+    # Vote member table data (lifetime)
+    vote_table_data = _vote_table_data(v)
 
     # Most contested bills
     contested_bills = vs.get("most_contested_bills", [])[:10]
 
-    def _contested_card(b):
-        total  = b.get("nay_count", 0) + 10  # approximate aye as 10+nay
-        nay_pct = int(b["nay_count"] / max(total, 1) * 100)
-        return html.Div([
-            html.Div([
-                html.Span(b.get("resolution") or "Unknown",
-                          style={"fontWeight": "700", "fontSize": ".85rem", "color": NAVY}),
-                html.Span(
-                    dbc.Badge(f"{b['nay_count']} Nay", color="danger",
-                              style={"fontSize": ".68rem"}),
-                    className="ms-2",
-                ),
-                html.Span(b.get("date", ""), style={"fontSize": ".73rem", "color": MUTED,
-                                                      "marginLeft": "8px"}),
-            ], className="d-flex align-items-center"),
-            html.Div((b.get("description") or "")[:90],
-                     style={"fontSize": ".78rem", "color": MUTED, "marginTop": "3px",
-                            "whiteSpace": "nowrap", "overflow": "hidden",
-                            "textOverflow": "ellipsis"}),
-            html.Div([
-                html.Div(style={"flex": f"{100 - nay_pct}", "background": SUCCESS,
-                                "height": "100%"}),
-                html.Div(style={"flex": str(nay_pct), "background": DANGER,
-                                "height": "100%"}),
-            ], className="vote-bar"),
-        ], className="contested-card")
-
-    # Available years (from contract dates + vote dates)
+    # Available years — CHANGE 3: single-select with "All Years" option
     _year_set = set()
     for c in f.get("contracts", []):
         if c.get("date"):
@@ -611,8 +720,12 @@ def analytics_layout():
         for b in stats.get("nay_bills", []):
             if b.get("date"):
                 _year_set.add(b["date"][:4])
-    years_available   = sorted(_year_set, reverse=True)
-    year_filter_opts  = [{"label": y, "value": y} for y in years_available]
+    years_available = sorted(_year_set, reverse=True)
+
+    year_filter_opts = (
+        [{"label": "All Years", "value": "all"}]
+        + [{"label": str(y), "value": str(y)} for y in range(2026, 2019, -1)]
+    )
 
     # Category filter pills
     cats_available = list(f.get("summary", {}).get("by_category", {}).keys())
@@ -692,7 +805,7 @@ def analytics_layout():
                 ], className="kpi-card"), width=6, lg=3, className="mb-3"),
             ], className="mb-2"),
 
-            # ── Year filter ───────────────────────────────────
+            # ── Year filter (CHANGE 3: single-select) ─────────
             html.Div([
                 html.Span([html.I(className="bi bi-calendar3 me-1"), "Filter by year:"],
                           style={"fontSize": ".78rem", "fontWeight": "600",
@@ -700,11 +813,11 @@ def analytics_layout():
                 dcc.Dropdown(
                     id="year-filter",
                     options=year_filter_opts,
-                    value=None,
-                    multi=True,
-                    placeholder="All years",
-                    clearable=True,
-                    style={"fontSize": ".82rem", "minWidth": "260px", "flex": "1"},
+                    value="all",
+                    multi=False,
+                    placeholder="All Years",
+                    clearable=False,
+                    style={"fontSize": ".82rem", "minWidth": "180px", "flex": "1"},
                 ),
             ], className="d-flex align-items-center gap-3 mb-4",
                style={"background": "white", "borderRadius": "12px",
@@ -717,6 +830,7 @@ def analytics_layout():
                 dbc.Row([
                     dbc.Col([
                         dcc.Graph(
+                            id="vote-chart",
                             figure=_vote_chart(v) if v else go.Figure(),
                             config={"displayModeBar": False},
                             style={"height": "340px"},
@@ -724,6 +838,7 @@ def analytics_layout():
                     ], width=12, lg=7),
                     dbc.Col([
                         dash_table.DataTable(
+                            id="vote-table",
                             data=vote_table_data,
                             columns=[{"name": k, "id": k}
                                      for k in ["Member","Total","Aye","Nay","Absent","Dissent"]],
@@ -753,7 +868,7 @@ def analytics_layout():
             html.Div([
                 html.Div("Most Contested Votes", className="section-title"),
                 html.Div(
-                    [_contested_card(b) for b in contested_bills]
+                    [_contested_card(b, rank=i+1) for i, b in enumerate(contested_bills)]
                     or [html.P("No contested vote data.", style={"color": MUTED})],
                     id="contested-votes-list",
                 ),
@@ -833,123 +948,76 @@ def analytics_layout():
 
         ]),
 
-        # ── Dataset Management ────────────────────────────────
+        # CHANGE 1: Static coverage line (replaced Dataset Management section)
         html.Div([
             html.Hr(style={"borderColor": BORDER, "margin": "8px 0 16px"}),
-            html.Div([
-                html.Div(
-                    html.Span([
-                        html.I(className="bi bi-database me-1"),
-                        f"{_init_coverage.get('total_chunks', 0):,} chunks indexed",
-                    ]) if _init_coverage.get("total_chunks") else "No data indexed.",
-                    style={"fontSize": ".82rem", "color": MUTED},
-                ),
-                dbc.Button(
-                    [html.I(className="bi bi-database-fill-add me-1"), "Add data"],
-                    id="btn-manage-data", color="light", size="sm",
-                    style={"fontSize": ".78rem", "border": f"1px solid {BORDER}",
-                           "fontWeight": "500"},
-                ),
-            ], className="d-flex justify-content-between align-items-center mb-2"),
-            dbc.Collapse([
-                dbc.Card([dbc.CardBody([
-                    dbc.Row([
-                        dbc.Col([
-                            html.Label("Start", style={"fontSize": ".76rem", "fontWeight": "600",
-                                                        "color": MUTED, "marginBottom": "3px"}),
-                            dcc.Dropdown(id="mgmt-start", options=MONTH_OPTIONS,
-                                         value="2025-01", clearable=False,
-                                         style={"fontSize": ".82rem"}),
-                        ], width=3),
-                        dbc.Col([
-                            html.Label("End", style={"fontSize": ".76rem", "fontWeight": "600",
-                                                      "color": MUTED, "marginBottom": "3px"}),
-                            dcc.Dropdown(id="mgmt-end", options=MONTH_OPTIONS,
-                                         value="2025-12", clearable=False,
-                                         style={"fontSize": ".82rem"}),
-                        ], width=3),
-                        dbc.Col([
-                            html.Div([
-                                dbc.Button(
-                                    [html.I(className="bi bi-clock-history me-1"),
-                                     "Last 6 months"],
-                                    id="btn-preset-6m", color="light", size="sm",
-                                    style={"fontSize": ".78rem",
-                                           "border": f"1px solid {BORDER}"}),
-                                dbc.Button(
-                                    [html.I(className="bi bi-play-fill me-1"), "Index"],
-                                    id="index-btn", color="primary", size="sm",
-                                    style={"fontSize": ".8rem", "fontWeight": "600"}),
-                            ], className="d-flex gap-2 align-items-end",
-                               style={"paddingTop": "20px"}),
-                        ], width=6),
-                    ], className="mb-3 g-3"),
-                    # Meeting types
-                    html.Div([
-                        html.Div([
-                            html.Span("Meeting Types", style={"fontWeight": "600",
-                                                               "color": NAVY, "fontSize": ".85rem"}),
-                            html.Div([
-                                dbc.Button("All",  id="btn-select-all", color="light", size="sm",
-                                           style={"fontSize": ".72rem", "border": f"1px solid {BORDER}"}),
-                                dbc.Button("None", id="btn-clear-all",  color="light", size="sm",
-                                           style={"fontSize": ".72rem", "border": f"1px solid {BORDER}"}),
-                            ], className="d-flex gap-2"),
-                        ], className="d-flex justify-content-between align-items-center mb-2"),
-                        dbc.Row([
-                            dbc.Col([_group_checklist("types-fullcouncil",
-                                                       "Full Council",
-                                                       MEETING_GROUPS["Full Council"])], width=3),
-                            dbc.Col([_group_checklist("types-committees",
-                                                       "Committees",
-                                                       MEETING_GROUPS["Committees"])], width=3,
-                                     style={"maxHeight": "200px", "overflowY": "auto"}),
-                            dbc.Col([_group_checklist("types-workinggroups",
-                                                       "Working Groups",
-                                                       MEETING_GROUPS["Working Groups"])], width=3),
-                            dbc.Col([_group_checklist("types-special",
-                                                       "Special Issues",
-                                                       MEETING_GROUPS["Special Issues"])], width=3,
-                                     style={"maxHeight": "200px", "overflowY": "auto"}),
-                        ], className="g-3"),
-                    ], style={"background": "#F9FAFB", "borderRadius": "6px",
-                               "padding": "12px 14px", "border": f"1px solid {BORDER}"}),
-                    html.Div(id="estimate-text",
-                             style={"marginTop": "10px", "fontSize": ".8rem", "color": MUTED}),
-                    dbc.Collapse([
-                        html.Hr(style={"borderColor": BORDER, "margin": "12px 0"}),
-                        html.Div(
-                            html.Div([
-                                html.Span("Indexed: ", style={"fontWeight": "600", "color": NAVY}),
-                                *[html.Div(f"• {seg['label']} ({seg['chunks']:,} chunks)",
-                                           style={"paddingLeft": "12px"})
-                                  for seg in _init_coverage.get("segments", [])],
-                            ]) if _init_coverage.get("segments") else "",
-                            style={"fontSize": ".78rem", "color": MUTED, "marginBottom": "8px"},
-                        ),
-                        html.Pre(id="progress-text",
-                                 style={"background": "#1a1f2e", "color": "#E2E8F0",
-                                        "borderRadius": "6px", "padding": "10px 14px",
-                                        "fontSize": ".78rem", "lineHeight": "1.6",
-                                        "height": "150px", "overflowY": "auto",
-                                        "fontFamily": "ui-monospace, 'Fira Code', monospace",
-                                        "marginBottom": 0, "whiteSpace": "pre-wrap"}),
-                    ], id="progress-collapse", is_open=False),
-                ], style={"padding": "16px 18px"})],
-                         style={"border": f"1px solid {BORDER}", "borderRadius": "8px"}),
-            ], id="data-mgmt-collapse", is_open=False),
+            html.Span([
+                "📅 Coverage: 2020–2026 · CityCouncil · ",
+                html.Strong(f"{_init_coverage.get('total_chunks', 0):,}"),
+                " chunks indexed",
+            ], style={"fontSize": ".82rem", "color": MUTED}),
         ], className="mb-5"),
 
     ], className="analytics-page")
+
+
+# ── TRACKER LAYOUT ────────────────────────────────────────────
+
+def tracker_layout():
+    return html.Div([
+
+        html.Div([
+            html.H2("Topic Tracker",
+                    style={"fontWeight": "700", "fontSize": "1.5rem",
+                           "color": TEXT, "marginBottom": "4px"}),
+            html.P("Follow council topics and get the latest updates from meeting minutes.",
+                   style={"color": MUTED, "fontSize": ".88rem", "marginBottom": 0}),
+        ], className="mb-4"),
+
+        # Add topic input
+        html.Div([
+            html.Div([
+                dbc.Input(
+                    id="topic-input",
+                    placeholder="Add a topic to track (e.g. Affordable Housing)…",
+                    type="text",
+                    style={"fontSize": ".9rem", "borderRadius": "10px 0 0 10px",
+                           "border": f"1px solid {BORDER}", "flex": "1"},
+                ),
+                dbc.Button(
+                    "+ Add",
+                    id="add-topic-btn",
+                    n_clicks=0,
+                    style={
+                        "background": f"linear-gradient(135deg, {AMBER} 0%, {AMBER_DARK} 100%)",
+                        "border": "none",
+                        "color": "white",
+                        "fontWeight": "600",
+                        "borderRadius": "0 10px 10px 0",
+                        "padding": "8px 20px",
+                    },
+                ),
+            ], className="d-flex mb-3"),
+        ]),
+
+        # Starter topics (shown when list is empty)
+        html.Div(id="starter-topics", className="mb-4"),
+
+        # Topics list
+        html.Div(id="topics-list"),
+
+    ], className="tracker-page")
 
 
 # ── ROOT LAYOUT ───────────────────────────────────────────────
 
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
-    dcc.Store(id="active-collection", data=_initial_store),
-    dcc.Store(id="chunks-store",      data=None),
-    dcc.Interval(id="poll-interval",  interval=1000, n_intervals=0, disabled=True),
+    dcc.Store(id="active-collection",  data=_initial_store),
+    dcc.Store(id="chunks-store",       data=None),
+    dcc.Store(id="saved-topics",       storage_type="local",   data=[]),
+    dcc.Store(id="last-visit",         storage_type="local",   data=None),
+    dcc.Store(id="chat-history",       storage_type="session", data=[]),
 
     html.Div([
 
@@ -979,12 +1047,11 @@ app.layout = html.Div([
                     html.I(className="bi bi-bar-chart nav-icon"),
                     html.Span("Analytics", className="nav-label"),
                 ], href="/analytics", id="nav-analytics", className="nav-item"),
+                # CHANGE 2: Tracker nav item (replaces Settings)
                 html.A([
-                    html.I(className="bi bi-gear nav-icon"),
-                    html.Span("Settings", className="nav-label"),
-                ], href="#", id="nav-settings",
-                   className="nav-item",
-                   style={"opacity": ".4", "cursor": "default"}),
+                    html.I(className="bi bi-bell nav-icon"),
+                    html.Span("Tracker", className="nav-label"),
+                ], href="/tracker", id="nav-tracker", className="nav-item"),
             ], className="nav-section"),
 
             # Footer: chunk count
@@ -1016,6 +1083,8 @@ def route(pathname):
         return chat_layout()
     if pathname == "/analytics":
         return analytics_layout()
+    if pathname == "/tracker":
+        return tracker_layout()
     return chat_layout()
 
 
@@ -1030,22 +1099,25 @@ def toggle_sidebar(_, current):
     return "collapsed" if "collapsed" not in (current or "") else ""
 
 
-# 3. Active nav highlight
+# 3. Active nav highlight (CHANGE 2: added nav-tracker)
 @app.callback(
     Output("nav-chat",      "className"),
     Output("nav-analytics", "className"),
+    Output("nav-tracker",   "className"),
     Input("url", "pathname"),
 )
 def nav_active(pathname):
     on_analytics = pathname == "/analytics"
+    on_tracker   = pathname == "/tracker"
+    on_chat      = not on_analytics and not on_tracker
     return (
-        "nav-item" + (" active" if not on_analytics else ""),
+        "nav-item" + (" active" if on_chat      else ""),
         "nav-item" + (" active" if on_analytics else ""),
+        "nav-item" + (" active" if on_tracker   else ""),
     )
 
 
 # 4. Coverage → sidebar chunk count only
-# (index-coverage-text / manifest-display are computed statically in analytics_layout)
 @app.callback(
     Output("sidebar-chunk-count", "children"),
     Input("active-collection", "data"),
@@ -1104,6 +1176,7 @@ def clear_filters(_):
     Output("show-more-btn",         "children"),
     Output("show-more-btn",         "n_clicks"),
     Output("search-strategy-panel", "children"),
+    Output("chat-history",          "data"),
     Input("ask-button", "n_clicks"),
     State("question-input",   "value"),
     State("filter-start",     "value"),
@@ -1111,9 +1184,10 @@ def clear_filters(_):
     State("filter-types",     "value"),
     State("filter-content",   "value"),
     State("active-collection","data"),
+    State("chat-history",     "data"),
     prevent_initial_call=True,
 )
-def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
+def run_query(_, question, f_start, f_end, f_types, f_content, coll_data, history):
     _btn_hidden = {"display": "none"}
     _btn_label  = [html.I(className="bi bi-chevron-down me-1"), "Show more sources"]
 
@@ -1122,18 +1196,18 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
             dbc.Alert([html.I(className="bi bi-exclamation-circle me-2"),
                        "Enter a question above."],
                       color="warning", className="d-flex align-items-center"),
-            "", None, _btn_hidden, _btn_label, 0, "",
+            "", None, _btn_hidden, _btn_label, 0, "", history or [],
         )
 
     coll_name = (coll_data or {}).get("collection_name")
     if not coll_name:
         return (
             dbc.Alert([html.I(className="bi bi-info-circle me-2"),
-                       "No data indexed. Go to ",
-                       html.Strong("Analytics → Add data"),
+                       "No data indexed. Run ",
+                       html.Code("python scripts/index_history.py"),
                        " to get started."],
                       color="info", className="d-flex align-items-center"),
-            "", None, _btn_hidden, _btn_label, 0, "",
+            "", None, _btn_hidden, _btn_label, 0, "", history or [],
         )
 
     chunks = refined_search(
@@ -1146,11 +1220,36 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
     )
     refined_queries = get_last_refined_queries()
 
+    # CHANGE 6: Year range suggestion banner
+    suggestion_banner = None
+    if (f_start or f_end) and (not chunks or (chunks[0].get("score", 0) < 0.15)):
+        try:
+            all_time_chunks = refined_search(
+                question, n_results=3, collection_name=coll_name
+            )
+            if all_time_chunks and all_time_chunks[0].get("score", 0) > 0.25:
+                result_years = sorted(set(
+                    c["date"][:4]
+                    for c in all_time_chunks
+                    if c.get("score", 0) > 0.20 and c.get("date", "")
+                ))
+                if result_years:
+                    suggestion_banner = dbc.Alert(
+                        [
+                            "💡 Better results found outside your date filter. Try expanding to include: ",
+                            html.Strong(", ".join(result_years)),
+                            " — clear your date filters and search again.",
+                        ],
+                        color="warning",
+                        className="mb-3",
+                    )
+        except Exception:
+            pass
+
     if not chunks:
-        return (
-            dbc.Alert("No results found. Try broadening your filters.", color="warning"),
-            "", None, _btn_hidden, _btn_label, 0, "",
-        )
+        no_results = dbc.Alert("No results found. Try broadening your filters.", color="warning")
+        answer_out = html.Div([suggestion_banner, no_results]) if suggestion_banner else no_results
+        return answer_out, "", None, _btn_hidden, _btn_label, 0, "", history or []
 
     rag_filters = {
         "collection_name": coll_name,
@@ -1194,17 +1293,20 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
     )
 
     answer_card = html.Div([
+        suggestion_banner or "",
         html.Div([
-            html.I(className="bi bi-robot me-2", style={"color": AMBER}),
-            html.Span("Answer", style={"fontWeight": "600", "color": TEXT,
-                                        "fontSize": ".9rem"}),
-            source_badge, cache_badge, filter_badge,
-        ], className="answer-header"),
-        html.Div([
-            dcc.Markdown(answer, style={"fontSize": ".93rem", "lineHeight": "1.75",
-                                        "color": TEXT}),
-        ], className="answer-body"),
-    ], className="answer-card")
+            html.Div([
+                html.I(className="bi bi-robot me-2", style={"color": AMBER}),
+                html.Span("Answer", style={"fontWeight": "600", "color": TEXT,
+                                            "fontSize": ".9rem"}),
+                source_badge, cache_badge, filter_badge,
+            ], className="answer-header"),
+            html.Div([
+                dcc.Markdown(answer, style={"fontSize": ".93rem", "lineHeight": "1.75",
+                                            "color": TEXT}),
+            ], className="answer-body"),
+        ], className="answer-card"),
+    ])
 
     show_relevant = chunks and chunks[0]["score"] > 0.1
     sources       = _render_source_grid(chunks[:3]) if show_relevant else ""
@@ -1219,7 +1321,11 @@ def run_query(_, question, f_start, f_end, f_types, f_content, coll_data):
         btn_style = _btn_hidden
         btn_label = _btn_label
 
-    return answer_card, sources, chunks, btn_style, btn_label, 0, strategy
+    # CHANGE 5: Update chat history (deduplicate, keep latest first, cap at 5)
+    new_history = [question] + [h for h in (history or []) if h != question]
+    new_history = new_history[:5]
+
+    return answer_card, sources, chunks, btn_style, btn_label, 0, strategy, new_history
 
 
 # 9. Show more / fewer sources
@@ -1249,160 +1355,31 @@ def toggle_sources(n_clicks, chunks_data):
     return _render_source_grid(visible), btn_label
 
 
-# 10. Data management toggle
-@app.callback(
-    Output("data-mgmt-collapse", "is_open"),
-    Output("btn-manage-data",    "children"),
-    Input("btn-manage-data", "n_clicks"),
-    State("data-mgmt-collapse", "is_open"),
-    prevent_initial_call=True,
-)
-def toggle_data_mgmt(_, is_open):
-    if is_open:
-        return False, [html.I(className="bi bi-database-fill-add me-1"), "Add data"]
-    return True,  [html.I(className="bi bi-chevron-up me-1"), "Close"]
-
-
-# 11. Date preset
-@app.callback(
-    Output("mgmt-start", "value"),
-    Output("mgmt-end",   "value"),
-    Input("btn-preset-6m", "n_clicks"),
-    prevent_initial_call=True,
-)
-def date_preset(_):
-    return "2025-07", "2025-12"
-
-
-# 12. Meeting type presets
-@app.callback(
-    Output("types-fullcouncil",   "value"),
-    Output("types-committees",    "value"),
-    Output("types-workinggroups", "value"),
-    Output("types-special",       "value"),
-    Input("btn-select-all", "n_clicks"),
-    Input("btn-clear-all",  "n_clicks"),
-    Input("btn-preset-6m",  "n_clicks"),
-    prevent_initial_call=True,
-)
-def type_presets(*_):
-    triggered = ctx.triggered_id
-    if triggered == "btn-select-all":
-        return (
-            [mt for mt, _ in MEETING_GROUPS["Full Council"]],
-            [mt for mt, _ in MEETING_GROUPS["Committees"]],
-            [mt for mt, _ in MEETING_GROUPS["Working Groups"]],
-            [mt for mt, _ in MEETING_GROUPS["Special Issues"]],
-        )
-    if triggered in ("btn-clear-all", "btn-preset-6m"):
-        fc = ["CityCouncil"] if triggered == "btn-preset-6m" else []
-        return fc, [], [], []
-    return dash.no_update, dash.no_update, dash.no_update, dash.no_update
-
-
-# 13. Index size estimate
-@app.callback(
-    Output("estimate-text", "children"),
-    Input("types-fullcouncil",   "value"),
-    Input("types-committees",    "value"),
-    Input("types-workinggroups", "value"),
-    Input("types-special",       "value"),
-    Input("mgmt-start", "value"),
-    Input("mgmt-end",   "value"),
-)
-def estimate(fc, co, wg, sp, start, end):
-    selected = (fc or []) + (co or []) + (wg or []) + (sp or [])
-    if not selected:
-        return html.Span("Select at least one meeting type.", style={"color": DANGER})
-    total_rows = sum(_TYPE_ROWS.get(mt, 0) for mt in selected)
-    scale = 1.0
-    if start and end:
-        sy, sm = map(int, start.split("-"))
-        ey, em = map(int, end.split("-"))
-        months = max(1, (ey - sy) * 12 + (em - sm) + 1)
-        scale  = min(1.0, months / 12)
-    est_chunks = int(total_rows * 4 * scale)
-    est_min    = max(1, est_chunks // 6000)
-    return html.Span([
-        html.I(className="bi bi-info-circle me-1"),
-        f"{len(selected)} type(s) · ~",
-        html.B(f"{est_chunks:,} chunks"),
-        f" · ~{est_min} min",
-    ])
-
-
-# 14. Indexing
-@app.callback(
-    Output("progress-text",     "children"),
-    Output("active-collection", "data"),
-    Output("poll-interval",     "disabled"),
-    Output("index-btn",         "disabled"),
-    Output("progress-collapse", "is_open"),
-    Input("index-btn",     "n_clicks"),
-    Input("poll-interval", "n_intervals"),
-    State("mgmt-start",           "value"),
-    State("mgmt-end",             "value"),
-    State("types-fullcouncil",    "value"),
-    State("types-committees",     "value"),
-    State("types-workinggroups",  "value"),
-    State("types-special",        "value"),
-    State("active-collection",    "data"),
-    prevent_initial_call=True,
-)
-def handle_indexing(index_click, n_intervals,
-                    start, end, fc, co, wg, sp, current_store):
-    triggered = ctx.triggered_id
-    if triggered == "index-btn":
-        meeting_types = (fc or []) + (co or []) + (wg or []) + (sp or [])
-        if not meeting_types:
-            return ("Select at least one meeting type.",
-                    current_store, True, False, True)
-        if not start or not end:
-            return ("Select a date range.", current_store, True, False, True)
-        state = pipeline.get_progress()
-        if state["status"] == "running":
-            return ("\n".join(state["lines"][-12:]), current_store, False, True, True)
-        pipeline.start_pipeline(meeting_types, start, end)
-        return ("Starting…", current_store, False, True, True)
-
-    elif triggered == "poll-interval":
-        state = pipeline.get_progress()
-        text  = "\n".join(state["lines"][-12:]) if state["lines"] else "…"
-        if state["status"] == "done":
-            cov   = pipeline.get_coverage()
-            store = {"collection_name": pipeline.COLLECTION_NAME,
-                     "chunks":          cov["total_chunks"]}
-            pipeline.reset()
-            return (text, store, True, False, True)
-        if state["status"] == "error":
-            pipeline.reset()
-            return (text, current_store, True, False, True)
-        return (text, current_store, False, True, True)
-
-    return dash.no_update, dash.no_update, True, False, dash.no_update
-
-
-# 15. Year filter → update all spending/contested charts
+# 10. Year filter → update all charts (CHANGE 3: single-select value is a string)
 @app.callback(
     Output("spending-chart",       "figure",   allow_duplicate=True),
     Output("contracts-table",      "data",     allow_duplicate=True),
     Output("monthly-chart",        "figure",   allow_duplicate=True),
     Output("district-chart",       "figure",   allow_duplicate=True),
     Output("contested-votes-list", "children", allow_duplicate=True),
+    Output("vote-chart",           "figure",   allow_duplicate=True),
+    Output("vote-table",           "data",     allow_duplicate=True),
     Input("year-filter", "value"),
     prevent_initial_call=True,
 )
-def filter_by_year(selected_years):
+def filter_by_year(selected_year):
     if not _analytics:
-        return go.Figure(), [], go.Figure(), go.Figure(), []
+        return go.Figure(), [], go.Figure(), go.Figure(), [], go.Figure(), []
 
-    f       = _analytics.get("financials") or {}
-    v       = _analytics.get("votes")      or {}
-    yrs     = set(selected_years) if selected_years else None
+    f   = _analytics.get("financials") or {}
+    v   = _analytics.get("votes")      or {}
+
+    # Normalize: "all" or None means no filter
+    yr  = selected_year if (selected_year and selected_year != "all") else None
 
     # ── Filtered contracts ────────────────────────────────────
     all_contracts = f.get("contracts", [])
-    filtered      = [c for c in all_contracts if not yrs or c.get("date", "")[:4] in yrs]
+    filtered      = [c for c in all_contracts if not yr or c.get("date", "")[:4] == yr]
 
     # Rebuild by_category
     by_cat: dict = defaultdict(lambda: {"total": 0.0, "count": 0})
@@ -1445,38 +1422,208 @@ def filter_by_year(selected_years):
         for c in filtered[:20]
     ]
 
+    # ── Vote chart + table (CHANGE 3) ────────────────────────
+    vote_fig  = _vote_chart(v, year=yr or "all")
+    vote_rows = _vote_table_data(v, year=yr or "all")
+
     # ── Filtered contested votes ──────────────────────────────
     all_bills      = v.get("summary", {}).get("most_contested_bills", [])
-    filtered_bills = [b for b in all_bills if not yrs or b.get("date", "")[:4] in yrs][:10]
-
-    def _contested_card_inline(b):
-        total   = b.get("nay_count", 0) + 10
-        nay_pct = int(b["nay_count"] / max(total, 1) * 100)
-        return html.Div([
-            html.Div([
-                html.Span(b.get("resolution") or "Unknown",
-                          style={"fontWeight": "700", "fontSize": ".85rem", "color": NAVY}),
-                html.Span(dbc.Badge(f"{b['nay_count']} Nay", color="danger",
-                                    style={"fontSize": ".68rem"}), className="ms-2"),
-                html.Span(b.get("date", ""), style={"fontSize": ".73rem", "color": MUTED,
-                                                      "marginLeft": "8px"}),
-            ], className="d-flex align-items-center"),
-            html.Div((b.get("description") or "")[:90],
-                     style={"fontSize": ".78rem", "color": MUTED, "marginTop": "3px",
-                            "whiteSpace": "nowrap", "overflow": "hidden",
-                            "textOverflow": "ellipsis"}),
-            html.Div([
-                html.Div(style={"flex": f"{100 - nay_pct}", "background": SUCCESS, "height": "100%"}),
-                html.Div(style={"flex": str(nay_pct), "background": DANGER, "height": "100%"}),
-            ], className="vote-bar"),
-        ], className="contested-card")
+    filtered_bills = [b for b in all_bills if not yr or b.get("date", "")[:4] == yr][:10]
 
     contested_children = (
-        [_contested_card_inline(b) for b in filtered_bills]
-        or [html.P("No contested votes for selected years.", style={"color": MUTED})]
+        [_contested_card(b, rank=i+1) for i, b in enumerate(filtered_bills)]
+        or [html.P("No contested votes for selected year.", style={"color": MUTED})]
     )
 
-    return spending_fig, contracts_rows, monthly_fig, district_fig, contested_children
+    return spending_fig, contracts_rows, monthly_fig, district_fig, contested_children, vote_fig, vote_rows
+
+
+# 11. Render history pills (CHANGE 5)
+@app.callback(
+    Output("history-pills-section", "children"),
+    Input("chat-history", "data"),
+)
+def render_history_pills(history):
+    if not history or len(history) < 1:
+        return ""
+    return html.Div([
+        html.Span("Recent questions:",
+                  style={"fontSize": ".75rem", "color": MUTED,
+                         "fontWeight": "500", "marginRight": "8px",
+                         "whiteSpace": "nowrap"}),
+        *[
+            html.Button(
+                f"🕐 {q[:40]}{'…' if len(q) > 40 else ''}",
+                id={"type": "history-pill", "index": i},
+                n_clicks=0,
+                className="history-pill me-2 mb-1",
+            )
+            for i, q in enumerate(history[:5])
+        ],
+    ], className="d-flex flex-wrap align-items-center mb-3")
+
+
+# 12. History pill click → fill input and trigger ask (CHANGE 5)
+@app.callback(
+    Output("question-input", "value",      allow_duplicate=True),
+    Output("ask-button",     "n_clicks",   allow_duplicate=True),
+    Input({"type": "history-pill", "index": ALL}, "n_clicks"),
+    State("chat-history", "data"),
+    State("ask-button",   "n_clicks"),
+    prevent_initial_call=True,
+)
+def history_pill_click(pill_clicks, history, current_ask_clicks):
+    if not any(pill_clicks):
+        return dash.no_update, dash.no_update
+    triggered = ctx.triggered_id
+    if not triggered or not isinstance(triggered, dict):
+        return dash.no_update, dash.no_update
+    idx = triggered["index"]
+    history = history or []
+    if idx >= len(history):
+        return dash.no_update, dash.no_update
+    return history[idx], (current_ask_clicks or 0) + 1
+
+
+# 13. Tracker: add topic (CHANGE 2)
+@app.callback(
+    Output("saved-topics", "data",    allow_duplicate=True),
+    Output("topic-input",  "value",   allow_duplicate=True),
+    Input("add-topic-btn", "n_clicks"),
+    Input({"type": "starter-topic", "index": ALL}, "n_clicks"),
+    State("topic-input",   "value"),
+    State("saved-topics",  "data"),
+    prevent_initial_call=True,
+)
+def add_topic(add_clicks, starter_clicks, input_val, saved):
+    saved = saved or []
+    triggered = ctx.triggered_id
+
+    if triggered == "add-topic-btn":
+        topic = (input_val or "").strip()
+        if not topic or topic in saved:
+            return saved, ""
+        return saved + [topic], ""
+
+    if isinstance(triggered, dict) and triggered.get("type") == "starter-topic":
+        idx   = triggered["index"]
+        topic = STARTER_TOPICS[idx] if idx < len(STARTER_TOPICS) else None
+        if not topic or topic in saved:
+            return saved, dash.no_update
+        return saved + [topic], dash.no_update
+
+    return saved, dash.no_update
+
+
+# 14. Tracker: remove topic (CHANGE 2)
+@app.callback(
+    Output("saved-topics", "data", allow_duplicate=True),
+    Input({"type": "remove-topic", "index": ALL}, "n_clicks"),
+    State("saved-topics", "data"),
+    prevent_initial_call=True,
+)
+def remove_topic(remove_clicks, saved):
+    if not any(remove_clicks):
+        return dash.no_update
+    saved     = saved or []
+    triggered = ctx.triggered_id
+    if not triggered or not isinstance(triggered, dict):
+        return dash.no_update
+    idx = triggered["index"]
+    if idx >= len(saved):
+        return saved
+    return [t for i, t in enumerate(saved) if i != idx]
+
+
+# 15. Tracker: render topics + update last-visit (CHANGE 2)
+@app.callback(
+    Output("topics-list",   "children"),
+    Output("starter-topics","children"),
+    Output("last-visit",    "data"),
+    Input("saved-topics",   "data"),
+    Input("url",            "pathname"),
+)
+def render_topics(saved, pathname):
+    from datetime import datetime
+    saved = saved or []
+
+    # Only update last-visit when on tracker page
+    last_visit = datetime.utcnow().isoformat() if pathname == "/tracker" else dash.no_update
+
+    # Show starter pills when list is empty
+    if not saved:
+        starter_section = html.Div([
+            html.P("Suggested topics to track:",
+                   style={"fontSize": ".78rem", "color": MUTED,
+                          "fontWeight": "600", "marginBottom": "10px"}),
+            html.Div([
+                html.Button(
+                    topic,
+                    id={"type": "starter-topic", "index": i},
+                    n_clicks=0,
+                    className="starter-pill me-2 mb-2",
+                )
+                for i, topic in enumerate(STARTER_TOPICS)
+            ], className="d-flex flex-wrap"),
+        ])
+        return "", starter_section, last_visit
+
+    # Hide starter section when topics exist
+    starter_section = ""
+
+    topic_cards = []
+    for idx, topic in enumerate(saved):
+        # Search for recent chunks on this topic
+        try:
+            topic_chunks = refined_search(
+                topic, n_results=8,
+                date_from="2020-01-01",
+                date_to="2026-12-31",
+            )
+        except Exception:
+            topic_chunks = []
+
+        # Filter for resolution/vote chunks and take 3 most recent
+        relevant = [
+            c for c in (topic_chunks or [])
+            if c.get("content_type") in ("resolution", "vote") or c.get("score", 0) > 0.2
+        ][:3]
+
+        mini_timeline = []
+        for c in relevant:
+            mini_timeline.append(html.Div([
+                html.Span(c.get("date", "")[:10],
+                          style={"fontSize": ".72rem", "fontWeight": "600",
+                                 "color": NAVY, "marginRight": "8px",
+                                 "whiteSpace": "nowrap"}),
+                html.Span(c.get("text", "")[:120] + ("…" if len(c.get("text", "")) > 120 else ""),
+                          style={"fontSize": ".78rem", "color": "#4B5563",
+                                 "lineHeight": "1.4"}),
+            ], style={"display": "flex", "gap": "8px", "marginBottom": "8px",
+                      "paddingBottom": "8px", "borderBottom": f"1px solid {BORDER}"}))
+
+        if not mini_timeline:
+            mini_timeline = [
+                html.P("No recent council activity found for this topic.",
+                       style={"fontSize": ".78rem", "color": MUTED, "marginBottom": 0}),
+            ]
+
+        topic_cards.append(html.Div([
+            html.Div([
+                html.Span(topic,
+                          style={"fontWeight": "700", "fontSize": "1rem", "color": TEXT}),
+                html.Button(
+                    html.I(className="bi bi-x"),
+                    id={"type": "remove-topic", "index": idx},
+                    n_clicks=0,
+                    style={"background": "none", "border": "none", "cursor": "pointer",
+                           "color": MUTED, "fontSize": ".9rem", "padding": "0 4px"},
+                ),
+            ], className="d-flex justify-content-between align-items-center mb-3"),
+            html.Div(mini_timeline),
+        ], className="tracker-card mb-3"))
+
+    return html.Div(topic_cards), starter_section, last_visit
 
 
 # ── RUN ───────────────────────────────────────────────────────
