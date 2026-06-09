@@ -76,60 +76,171 @@ def _fmt(value: float) -> str:
     return f"${value:.0f}"
 
 
+# ── Topic keyword map ────────────────────────────────────────
+_TOPIC_KEYWORDS = {
+    "housing":        ["housing", "affordable", "rezoning", "rezone", "residential",
+                       "apartment", "condo", "rent", "tenant", "landlord", "hud",
+                       "inclusionary", "accessory dwelling", "adu"],
+    "homelessness":   ["homeless", "shelter", "encampment", "supportive housing",
+                       "navigation center", "unhoused", "transitional"],
+    "transportation": ["transportation", "transit", "bus", "rail", "bike", "road",
+                       "highway", "rtd", "scooter", "pedestrian", "crosswalk",
+                       "mobility", "traffic"],
+    "climate":        ["climate", "environment", "green", "sustainability", "emissions",
+                       "carbon", "renewable", "solar", "energy", "compost", "recycle"],
+    "immigration":    ["immigrant", "immigration", "newcomer", "sanctuary", "refugee",
+                       "undocumented", "asylum", "visa"],
+    "public safety":  ["police", "safety", "crime", "fire", "emergency", "sheriff",
+                       "911", "dispatcher", "gun", "weapon"],
+    "education":      ["education", "school", "dps", "denver public schools",
+                       "library", "teacher", "student", "curriculum"],
+    "aviation":       ["airport", "dia", "aviation", "airline", "terminal", "concourse"],
+    "budget":         ["budget", "fiscal", "appropriation", "fund", "allocation",
+                       "expenditure", "revenue", "tax", "mill levy"],
+    "parks":          ["park", "recreation", "trail", "open space", "playground",
+                       "mountain parks", "golf"],
+}
+
+_YEAR_RE = re.compile(r'\b(20\d{2})\b')
+
+
+def _extract_filters(question: str):
+    """Return (year_str | None, [topic_keywords])."""
+    q   = question.lower()
+    yr  = (_YEAR_RE.search(question) or [None])[0]   # "2025" or None
+    kws = []
+    for topic, words in _TOPIC_KEYWORDS.items():
+        if any(w in q for w in [topic] + words[:3]):   # check topic name + first 3 keywords
+            kws.extend(words)
+    return yr, list(set(kws))
+
+
+def _filter_bills(nay_bills: list, year: str, keywords: list) -> list:
+    """Filter a member's nay_bills list by year and/or topic keywords."""
+    result = []
+    for bill in nay_bills:
+        if year and not bill.get("date", "").startswith(year):
+            continue
+        if keywords:
+            desc = (bill.get("description") or "").lower()
+            if not any(kw in desc for kw in keywords):
+                continue
+        result.append(bill)
+    return result
+
+
 def format_vote_context(question: str, votes_data: dict) -> str:
     members = votes_data.get("members", {})
     summary = votes_data.get("summary", {})
-
     if not members:
         return ""
 
-    ranked = sorted(
-        members.items(),
-        key=lambda x: x[1]["nay_count"],
-        reverse=True,
-    )
+    year, keywords = _extract_filters(question)
+    topic_filtered = bool(keywords)
+    year_filtered  = bool(year)
 
-    lines = ["VOTE ANALYTICS (pre-computed from all City Council records):\n"]
-    lines.append("Council members ranked by dissenting (Nay) votes:")
-    for name, s in ranked:
-        if s['total_votes'] == 0 and s['absent_count'] == 0:
-            continue
+    # Build per-member filtered stats
+    member_stats = []
+    for name, s in members.items():
+        filtered_bills = _filter_bills(s.get("nay_bills", []), year, keywords)
+        nay_n = len(filtered_bills)
+        # Absent dates are not linked to specific bills — only show when no topic filter
+        absent_n = 0
+        if not topic_filtered:
+            absent_n = len([d for d in s.get("absent_dates", [])
+                            if not year or d.startswith(year)])
+
+        if topic_filtered or year_filtered:
+            if nay_n == 0 and absent_n == 0:
+                continue
+        else:
+            nay_n          = s["nay_count"]
+            absent_n       = s["absent_count"]
+            filtered_bills = s.get("nay_bills", [])
+        member_stats.append((name, nay_n, absent_n, filtered_bills, s))
+
+    # If topic keywords matched nothing (truncated descriptions), fall back to year-only
+    # so Claude still gets the full list of 2025 nay votes to cross-reference with RAG chunks
+    topic_fallback = False
+    if topic_filtered and not member_stats:
+        topic_fallback = True
+        for name, s in members.items():
+            filtered_bills = _filter_bills(s.get("nay_bills", []), year, [])
+            nay_n = len(filtered_bills)
+            if nay_n == 0:
+                continue
+            member_stats.append((name, nay_n, 0, filtered_bills, s))
+
+    member_stats.sort(key=lambda x: x[1], reverse=True)
+
+    # Header
+    scope_parts = []
+    if year_filtered:
+        scope_parts.append(year)
+    if topic_filtered:
+        # Recover the matched topic name(s) for the header label
+        q = question.lower()
+        matched = [t for t, ws in _TOPIC_KEYWORDS.items()
+                   if t in q or any(w in q for w in ws[:3])]
+        scope_parts.append(" / ".join(matched) if matched else "topic")
+    scope = " · ".join(scope_parts) if scope_parts else "all years · all legislation"
+    lines = [f"VOTE ANALYTICS ({scope}):\n"]
+
+    if not member_stats:
+        lines.append("No Nay votes found for this combination.")
+        return "\n".join(lines)
+
+    if topic_fallback:
         lines.append(
-            f"  {name}: {s['nay_count']} Nay votes "
-            f"({s['nay_rate']:.1%} dissent rate), "
-            f"{s['absent_count']} absences, "
-            f"{s['total_votes']} total votes cast"
+            "Note: bill descriptions are too short to match topic keywords directly. "
+            "Showing ALL nay votes for the requested year — cross-reference with the "
+            "meeting-minutes excerpts above to identify which bills are housing-related.\n"
         )
 
-    # Detailed Nay history for the top 2 dissenters
-    for name, s in ranked[:2]:
-        if not s['nay_bills']:
+    lines.append("Council members with Nay votes (filtered to your query):")
+    for name, nay_n, absent_n, bills, raw in member_stats:
+        total = raw["total_votes"] if not (topic_filtered or year_filtered) else "n/a"
+        rate  = f"{raw['nay_rate']:.1%}" if not (topic_filtered or year_filtered) else ""
+        lines.append(
+            f"  {name}: {nay_n} Nay vote{'s' if nay_n != 1 else ''}"
+            + (f" ({rate} overall dissent rate)" if rate else "")
+            + (f", {absent_n} absence{'s' if absent_n != 1 else ''}" if absent_n else "")
+        )
+
+    # Bill details for top dissenters (up to top 3)
+    for name, nay_n, absent_n, bills, _ in member_stats[:3]:
+        if not bills:
             continue
-        lines.append(f"\n{name}'s Nay votes:")
-        for bill in s['nay_bills'][:6]:
-            desc = bill['description'][:80] if bill['description'] else '(no description)'
-            others = ', '.join(bill['other_nays']) if bill['other_nays'] else 'lone dissent'
+        lines.append(f"\n{name}'s relevant Nay votes:")
+        for bill in bills[:8]:
+            desc   = (bill.get("description") or "")[:90] or "(no description)"
+            others = ", ".join(bill.get("other_nays", [])) or "lone dissent"
             lines.append(
                 f"  - {bill['resolution']} ({bill['date']}): {desc} "
                 f"[{bill['bill_result']}] — others Nay: {others}"
             )
 
-    # Most contested votes
-    contested_bills = summary.get("most_contested_bills", [])[:5]
-    if contested_bills:
-        lines.append("\nMost contested votes (by Nay count):")
-        for b in contested_bills:
-            nay_names = ', '.join(b['nays'])
+    # Most contested votes — filter if applicable
+    contested = summary.get("most_contested_bills", [])
+    if year_filtered:
+        contested = [b for b in contested if b.get("date", "").startswith(year)]
+    if topic_filtered:
+        contested = [b for b in contested
+                     if any(kw in (b.get("description") or "").lower() for kw in keywords)]
+    if contested:
+        lines.append("\nMost contested votes (matching your query):")
+        for b in contested[:5]:
             lines.append(
                 f"  - {b['resolution']} ({b['date']}): "
-                f"{b['nay_count']} Nays — {nay_names}"
+                f"{b['nay_count']} Nays — {', '.join(b['nays'])}"
             )
 
-    lines.append(
-        f"\nSummary: {summary.get('contested_votes', 0)} contested votes, "
-        f"{summary.get('unanimous_votes', 0)} unanimous, "
-        f"{summary.get('total_votes_parsed', 0)} total parsed."
-    )
+    if not (topic_filtered or year_filtered):
+        lines.append(
+            f"\nSummary: {summary.get('contested_votes', 0)} contested, "
+            f"{summary.get('unanimous_votes', 0)} unanimous, "
+            f"{summary.get('total_votes_parsed', 0)} total parsed."
+        )
 
     return "\n".join(lines)
 
