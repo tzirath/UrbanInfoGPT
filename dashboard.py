@@ -964,9 +964,61 @@ def analytics_layout():
 
 # ── TRACKER LAYOUT ────────────────────────────────────────────
 
-def tracker_layout():
-    return html.Div([
+def tracker_layout(topics=None, last_visit=None):
+    topics = topics or []
 
+    # Build topic cards inline (no separate callback needed)
+    if not topics:
+        content = html.Div([
+            html.P("Suggested topics to track:",
+                   style={"fontSize": ".78rem", "color": MUTED,
+                          "fontWeight": "600", "marginBottom": "10px"}),
+            html.Div([
+                html.Button(topic, id={"type": "starter-topic", "index": i},
+                            n_clicks=0, className="starter-pill me-2 mb-2")
+                for i, topic in enumerate(STARTER_TOPICS)
+            ], className="d-flex flex-wrap"),
+        ], className="mb-4")
+    else:
+        topic_cards = []
+        for idx, topic in enumerate(topics):
+            try:
+                topic_chunks = refined_search(topic, n_results=8,
+                                              date_from="2020-01-01",
+                                              date_to="2026-12-31")
+            except Exception:
+                topic_chunks = []
+
+            relevant = [c for c in (topic_chunks or [])
+                        if c.get("content_type") in ("resolution", "vote")
+                        or c.get("score", 0) > 0.2][:3]
+
+            mini_timeline = [
+                html.Div([
+                    html.Span(c.get("date", "")[:10],
+                              style={"fontSize": ".72rem", "fontWeight": "600",
+                                     "color": NAVY, "marginRight": "8px", "whiteSpace": "nowrap"}),
+                    html.Span(c.get("text", "")[:120] + "…",
+                              style={"fontSize": ".78rem", "color": "#4B5563", "lineHeight": "1.4"}),
+                ], style={"display": "flex", "gap": "8px", "marginBottom": "8px",
+                          "paddingBottom": "8px", "borderBottom": f"1px solid {BORDER}"})
+                for c in relevant
+            ] or [html.P("No recent council activity found for this topic.",
+                         style={"fontSize": ".78rem", "color": MUTED, "marginBottom": 0})]
+
+            topic_cards.append(html.Div([
+                html.Div([
+                    html.Span(topic, style={"fontWeight": "700", "fontSize": "1rem", "color": TEXT}),
+                    html.Button(html.I(className="bi bi-x"),
+                                id={"type": "remove-topic", "index": idx}, n_clicks=0,
+                                style={"background": "none", "border": "none", "cursor": "pointer",
+                                       "color": MUTED, "fontSize": ".9rem", "padding": "0 4px"}),
+                ], className="d-flex justify-content-between align-items-center mb-3"),
+                html.Div(mini_timeline),
+            ], className="tracker-card mb-3"))
+        content = html.Div(topic_cards)
+
+    return html.Div([
         html.Div([
             html.H2("Topic Tracker",
                     style={"fontWeight": "700", "fontSize": "1.5rem",
@@ -975,38 +1027,21 @@ def tracker_layout():
                    style={"color": MUTED, "fontSize": ".88rem", "marginBottom": 0}),
         ], className="mb-4"),
 
-        # Add topic input
         html.Div([
             html.Div([
-                dbc.Input(
-                    id="topic-input",
-                    placeholder="Add a topic to track (e.g. Affordable Housing)…",
-                    type="text",
-                    style={"fontSize": ".9rem", "borderRadius": "10px 0 0 10px",
-                           "border": f"1px solid {BORDER}", "flex": "1"},
-                ),
-                dbc.Button(
-                    "+ Add",
-                    id="add-topic-btn",
-                    n_clicks=0,
-                    style={
-                        "background": f"linear-gradient(135deg, {AMBER} 0%, {AMBER_DARK} 100%)",
-                        "border": "none",
-                        "color": "white",
-                        "fontWeight": "600",
-                        "borderRadius": "0 10px 10px 0",
-                        "padding": "8px 20px",
-                    },
-                ),
+                dbc.Input(id="topic-input",
+                          placeholder="Add a topic to track (e.g. Affordable Housing)…",
+                          type="text",
+                          style={"fontSize": ".9rem", "borderRadius": "10px 0 0 10px",
+                                 "border": f"1px solid {BORDER}", "flex": "1"}),
+                dbc.Button("+ Add", id="add-topic-btn", n_clicks=0,
+                           style={"background": f"linear-gradient(135deg, {AMBER} 0%, {AMBER_DARK} 100%)",
+                                  "border": "none", "color": "white", "fontWeight": "600",
+                                  "borderRadius": "0 10px 10px 0", "padding": "8px 20px"}),
             ], className="d-flex mb-3"),
         ]),
 
-        # Starter topics (shown when list is empty)
-        html.Div(id="starter-topics", className="mb-4"),
-
-        # Topics list
-        html.Div(id="topics-list"),
-
+        content,
     ], className="tracker-page")
 
 
@@ -1074,18 +1109,20 @@ app.layout = html.Div([
 
 # ── CALLBACKS ─────────────────────────────────────────────────
 
-# 1. URL routing
+# 1. URL routing — saved-topics triggers re-render so tracker updates on add/remove
 @app.callback(
     Output("page-content", "children"),
     Input("url", "pathname"),
+    Input("saved-topics", "data"),
+    State("last-visit", "data"),
 )
-def route(pathname):
+def route(pathname, saved_topics, last_visit):
     if pathname in [None, "/", "/chat"]:
         return chat_layout()
     if pathname == "/analytics":
         return analytics_layout()
     if pathname == "/tracker":
-        return tracker_layout()
+        return tracker_layout(saved_topics, last_visit)
     return chat_layout()
 
 
@@ -1536,96 +1573,17 @@ def remove_topic(remove_clicks, saved):
     return [t for i, t in enumerate(saved) if i != idx]
 
 
-# 15. Tracker: render topics + update last-visit (CHANGE 2)
+# 15. Update last-visit timestamp when navigating to tracker
 @app.callback(
-    Output("topics-list",   "children"),
-    Output("starter-topics","children"),
-    Output("last-visit",    "data"),
-    Input("saved-topics",   "data"),
-    Input("url",            "pathname"),
+    Output("last-visit", "data"),
+    Input("url", "pathname"),
     prevent_initial_call=True,
 )
-def render_topics(saved, pathname):
+def update_last_visit(pathname):
     from datetime import datetime
-    saved = saved or []
-
-    # Only update last-visit when on tracker page
-    last_visit = datetime.utcnow().isoformat() if pathname == "/tracker" else dash.no_update
-
-    # Show starter pills when list is empty
-    if not saved:
-        starter_section = html.Div([
-            html.P("Suggested topics to track:",
-                   style={"fontSize": ".78rem", "color": MUTED,
-                          "fontWeight": "600", "marginBottom": "10px"}),
-            html.Div([
-                html.Button(
-                    topic,
-                    id={"type": "starter-topic", "index": i},
-                    n_clicks=0,
-                    className="starter-pill me-2 mb-2",
-                )
-                for i, topic in enumerate(STARTER_TOPICS)
-            ], className="d-flex flex-wrap"),
-        ])
-        return "", starter_section, last_visit
-
-    # Hide starter section when topics exist
-    starter_section = ""
-
-    topic_cards = []
-    for idx, topic in enumerate(saved):
-        # Search for recent chunks on this topic
-        try:
-            topic_chunks = refined_search(
-                topic, n_results=8,
-                date_from="2020-01-01",
-                date_to="2026-12-31",
-            )
-        except Exception:
-            topic_chunks = []
-
-        # Filter for resolution/vote chunks and take 3 most recent
-        relevant = [
-            c for c in (topic_chunks or [])
-            if c.get("content_type") in ("resolution", "vote") or c.get("score", 0) > 0.2
-        ][:3]
-
-        mini_timeline = []
-        for c in relevant:
-            mini_timeline.append(html.Div([
-                html.Span(c.get("date", "")[:10],
-                          style={"fontSize": ".72rem", "fontWeight": "600",
-                                 "color": NAVY, "marginRight": "8px",
-                                 "whiteSpace": "nowrap"}),
-                html.Span(c.get("text", "")[:120] + ("…" if len(c.get("text", "")) > 120 else ""),
-                          style={"fontSize": ".78rem", "color": "#4B5563",
-                                 "lineHeight": "1.4"}),
-            ], style={"display": "flex", "gap": "8px", "marginBottom": "8px",
-                      "paddingBottom": "8px", "borderBottom": f"1px solid {BORDER}"}))
-
-        if not mini_timeline:
-            mini_timeline = [
-                html.P("No recent council activity found for this topic.",
-                       style={"fontSize": ".78rem", "color": MUTED, "marginBottom": 0}),
-            ]
-
-        topic_cards.append(html.Div([
-            html.Div([
-                html.Span(topic,
-                          style={"fontWeight": "700", "fontSize": "1rem", "color": TEXT}),
-                html.Button(
-                    html.I(className="bi bi-x"),
-                    id={"type": "remove-topic", "index": idx},
-                    n_clicks=0,
-                    style={"background": "none", "border": "none", "cursor": "pointer",
-                           "color": MUTED, "fontSize": ".9rem", "padding": "0 4px"},
-                ),
-            ], className="d-flex justify-content-between align-items-center mb-3"),
-            html.Div(mini_timeline),
-        ], className="tracker-card mb-3"))
-
-    return html.Div(topic_cards), starter_section, last_visit
+    if pathname == "/tracker":
+        return datetime.utcnow().isoformat()
+    return dash.no_update
 
 
 # ── RUN ───────────────────────────────────────────────────────
